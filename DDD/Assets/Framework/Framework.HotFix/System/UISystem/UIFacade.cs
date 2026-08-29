@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using  NFramework.Core;
-using    NFramework.ModuleSystem;
+using NFramework.Core;
+using NFramework.ModuleSystem;
 using UnityEngine;
 
 namespace NFramework.ModuleSystem
@@ -16,11 +16,9 @@ namespace NFramework.ModuleSystem
         /// <summary>
         /// 与 <c>m_UIElements</c> 顺序一致；Unity 按 Object 引用序列化（资源用 GUID，预制体内用 fileID）。
         /// </summary>
-        [SerializeField, HideInInspector]
-        private Object[] m_SerializedIUIComponentObjects;
+        [SerializeField, HideInInspector] private Object[] m_SerializedIUIComponentObjects;
 
-        [System.NonSerialized]
-        public Object[] Components;
+        [System.NonSerialized] public Object[] Components;
 
         public BitField16 State = new BitField16(0);
 
@@ -75,7 +73,7 @@ namespace NFramework.ModuleSystem
                 return default(T);
             }
 
-            return (T)Components[index];
+            return (T)(object)Components[index];
         }
 
 
@@ -88,14 +86,15 @@ namespace NFramework.ModuleSystem
         {
             //组件名称，用于生成字段或者方法
             public string Name;
+
             //组件
             public UnityEngine.Object Component;
+
             // 描述，用于生成备注
             public string Desc;
         }
 
-        [SerializeField, HideInInspector]
-        public List<UIElement> m_UIElements = new List<UIElement>();
+        [SerializeField, HideInInspector] public List<UIElement> m_UIElements = new List<UIElement>();
 
         public void AddUIElement(UIElement inUIElement)
         {
@@ -113,20 +112,15 @@ namespace NFramework.ModuleSystem
         }
 
         // 编辑器配置数据（序列化保存，避免每次打开丢失）
-        [SerializeField, HideInInspector]
-        public string m_ModuleName = "";
+        [SerializeField, HideInInspector] public string m_ModuleName = "";
 
-        [SerializeField, HideInInspector]
-        public string m_SubModuleName = "";
+        [SerializeField, HideInInspector] public string m_SubModuleName = "";
 
-        [SerializeField, HideInInspector]
-        public string m_UIName = "";
+        [SerializeField, HideInInspector] public string m_UIName = "";
 
-        [SerializeField, HideInInspector]
-        public bool m_EnableSubModule = false;
+        [SerializeField, HideInInspector] public bool m_EnableSubModule = false;
 
-        [SerializeField, HideInInspector]
-        public string m_ScriptName = ""; // 自动生成的脚本名称，用于ViewConfig的ID
+        [SerializeField, HideInInspector] public string m_ScriptName = ""; // 自动生成的脚本名称，用于ViewConfig的ID
 
 #endif
 
@@ -146,10 +140,14 @@ namespace NFramework.ModuleSystem
             {
                 return;
             }
+
             State.Learn(0);
             foreach (var component in Components)
             {
-                component.UIComponentAwake();
+                if (component is IUIComponent uiComponent)
+                {
+                    uiComponent.UIComponentAwake();
+                }
             }
         }
 
@@ -159,10 +157,14 @@ namespace NFramework.ModuleSystem
             {
                 return;
             }
+
             State.Learn(1);
             foreach (var component in Components)
             {
-                component.UIComponentDestroy();
+                if (component is IUIComponent uiComponent)
+                {
+                    uiComponent.UIComponentDestroy();
+                }
             }
         }
     }

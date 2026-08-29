@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: UISystemConfig
   m_EditorClassIdentifier: 
   LRUCount: 0
-  LogicScriptGenerateRootPath: Assets/GameLogic/UI/Logics
+  LogicScriptGenerateRootPath: Assets/GameLogic/LogicModule
   ViewConfigGeneratePath: Assets/GameLogic/Generate/ViewConfig
   ViewConfigDataRoot: Assets/GameLogic/UI/Config
   TemplatesRoot: Assets/GameLogic/UI/Templates

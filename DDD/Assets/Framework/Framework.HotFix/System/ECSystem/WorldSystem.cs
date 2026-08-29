@@ -11,9 +11,8 @@ namespace NFramework.ModuleSystem
     {
         private readonly Dictionary<Type, World> m_Worlds = new Dictionary<Type, World>();
 
-
         /// <summary>获取或创建指定类型的 World（每种类型全局唯一一份）</summary>
-        public T GetWorld<T>() where T : World
+        public T GetWorld<T>() where T : World, new()
         {
             Type type = typeof(T);
             if (m_Worlds.TryGetValue(type, out var world))
@@ -21,40 +20,26 @@ namespace NFramework.ModuleSystem
                 return (T)world;
             }
 
-            world = CreateWorld(type);
-            return (T)world;
+            return CreateWorld<T>();
         }
 
         /// <summary>创建并注册一个 World（已存在则直接返回已有实例）</summary>
-        public World CreateWorld(Type type)
+        public T CreateWorld<T>() where T : World, new()
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
+            Type type = typeof(T);
             if (m_Worlds.TryGetValue(type, out var exist))
             {
-                return exist;
+                return (T)exist;
             }
 
-            if (!typeof(World).IsAssignableFrom(type))
-            {
-                throw new ArgumentException($"type {type} is not a World", nameof(type));
-            }
-
-            var world = Entity.Create(type) as World;
+            // Entity.CreateRoot 内部使用 new T() 创建，并正确初始化 Root 实体
+            var world = Entity.CreateRoot<T>(0);
             GetSystem<EntitySystem>().Awake(world);
             GetSystem<EntitySystem>().Start(world);
 
             m_Worlds.Add(type, world);
 
             return world;
-        }
-
-        public T CreateWorld<T>() where T : World
-        {
-            return (T)CreateWorld(typeof(T));
         }
 
         public bool HasWorld<T>() where T : World
@@ -66,8 +51,6 @@ namespace NFramework.ModuleSystem
         {
             return m_Worlds.ContainsKey(type);
         }
-
-  
 
         public bool RemoveWorld<T>() where T : World
         {

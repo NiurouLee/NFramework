@@ -101,8 +101,8 @@ namespace NFramework.ModuleSystem
                     // 打开脚本按钮
                     if (!string.IsNullOrEmpty(facade.m_ScriptName))
                     {
-                        string logicFolderPath = FrameworkConfigAssetEditor.GetConfig().UISystemConfig.LogicScriptGenerateRootPath;
-                        string logicFilePath = Path.Combine(logicFolderPath, facade.m_ScriptName + ".cs");
+                        string logicRootPath = FrameworkConfigAssetEditor.GetConfig().UISystemConfig.LogicScriptGenerateRootPath;
+                        string logicFilePath = Path.Combine(logicRootPath, facade.m_ModuleName ?? "", "UI", facade.m_ScriptName + ".cs");
                         bool logicFileExists = File.Exists(logicFilePath);
 
                         EditorGUI.BeginDisabledGroup(!logicFileExists);

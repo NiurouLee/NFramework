@@ -5,16 +5,19 @@ namespace NFramework.ModuleSystem
 {
     public class ResSystem : FrameworkSystemModuleBase
     {
-        private NormalResourceGroup _resourceManager;
+        private NormalResourceGroup _resourceLorder;
 
-        private SceneGroup _sceneManager;
+        private SceneGroup _sceneLoader;
+
+        /// <summary>全局场景管理器</summary>
+        public SceneGroup SceneLoader => _sceneLoader;
 
         public override void Awake()
         {
-            this._resourceManager = new NormalResourceGroup();
-            this._resourceManager.Awake();
-            this._sceneManager = new SceneGroup();
-            this._sceneManager.Awake();
+            this._resourceLorder = new NormalResourceGroup();
+            this._resourceLorder.Awake();
+            this._sceneLoader = new SceneGroup();
+            this._sceneLoader.Awake();
         }
 
         public Dictionary<string, string> AssetID2PathDic = new Dictionary<string, string>();
@@ -122,7 +125,7 @@ namespace NFramework.ModuleSystem
 
         public bool HasResID(string inAssetID)
         {
-            return this._resourceManager.HasAsset(inAssetID);
+            return this._resourceLorder.HasAsset(inAssetID);
         }
     }
 }

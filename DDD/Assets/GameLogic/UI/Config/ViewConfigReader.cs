@@ -3,7 +3,6 @@ using UnityEngine;
 using NFramework.ModuleSystem;
 using System.IO;
 
-using XHFramework;
 namespace Game.Logic
 {
     /// <summary>

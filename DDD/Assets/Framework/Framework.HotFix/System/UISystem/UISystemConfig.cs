@@ -18,7 +18,7 @@ namespace NFramework.ModuleSystem
         /// </summary>
         public int LRUCount;
 
-        /// <summary>
+        ///<summary>
         /// 逻辑脚本生成根目录（保留字段，兼容旧配置）
         /// </summary>
 #if UNITY_EDITOR

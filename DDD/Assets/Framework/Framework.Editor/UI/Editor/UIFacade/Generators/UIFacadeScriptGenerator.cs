@@ -8,7 +8,7 @@ using XHFramework;
 namespace NFramework.ModuleSystem
 {
     /// <summary>
-    /// UIFacade 脚本生成：输出到 <see cref="UISystemConfig.LogicScriptGenerateRootPath"/> / 模块名 / 脚本名.cs；
+    /// UIFacade 脚本生成：输出到 <see cref="UISystemConfig.LogicScriptGenerateRootPath"/> / 模块名 / UI / 脚本名.cs；
     /// 已存在文件时只替换「UI Components (Auto Generated)」区域（属性 + OnBindFacade），保留 Event Handlers / Live 等手写代码。
     /// 组件属性由 Default/Types 下 ComponentProperty 模板生成；绑定与事件桩由
     /// <see cref="UIFacadeCodeTemplateLoader.InteractTemplateIdByComponentTypeName"/> 映射到
@@ -52,7 +52,7 @@ namespace NFramework.ModuleSystem
 
             UIFacadeViewConfigDrawer.SaveViewConfigToJson(facade, viewConfig);
 
-            string logicAssetPath = Path.Combine(FrameworkConfigAssetEditor.GetConfig().UISystemConfig.LogicScriptGenerateRootPath, moduleFolder, scriptName + ".cs")
+            string logicAssetPath = Path.Combine(FrameworkConfigAssetEditor.GetConfig().UISystemConfig.LogicScriptGenerateRootPath, moduleFolder, "UI", scriptName + ".cs")
                 .Replace('\\', '/');
             string logicDiskPath = AssetPathToAbsolute(logicAssetPath);
 

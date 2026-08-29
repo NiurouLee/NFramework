@@ -4,7 +4,7 @@ using NFramework.Core;
 
 namespace NFramework.ModuleSystem
 {
-    public class Context : IAwakeSystem, IDestroySystem
+    public class Context : NObject, IAwakeSystem, IDestroySystem
     {
         private Dictionary<string, object> _attributes;
 

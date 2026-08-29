@@ -12,7 +12,7 @@ namespace Game.Logic
     /// <summary>
     /// 作为热更的主入口,和游戏热更逻辑的主要访问点
     /// </summary>
-    public class Game
+    public partial class Game
     {
         /// <summary>
         /// 热更层入口（AOT 层调用）
@@ -25,6 +25,7 @@ namespace Game.Logic
             NFROOT.AwakeRoot();
             AwakeSystemConfig();
             AwakeSystem();
+            StartGameLogic();
         }
 
         public static void AwakeSystemConfig()
@@ -84,12 +85,12 @@ namespace Game.Logic
             return NFROOT.I.GetSystem<GameLogicSystem>().GetLogicModule<T>();
         }
 
-        public static T GetWorld<T>() where T : World
+        public static T GetWorld<T>() where T : World, new()
         {
             return NFROOT.I.GetSystem<WorldSystem>().GetWorld<T>();
         }
 
-        public static T GetContext<T>() where T : Context
+        public static T GetContext<T>() where T : Context, new()
         {
             return NFROOT.I.GetSystem<ContextSystem>().GetContext<T>();
         }

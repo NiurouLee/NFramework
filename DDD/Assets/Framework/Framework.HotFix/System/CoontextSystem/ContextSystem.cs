@@ -15,7 +15,7 @@ namespace NFramework.ModuleSystem
         public Context CurrentContext { get; private set; }
 
         /// <summary>获取或创建指定类型的 Context（每种类型全局唯一一份）</summary>
-        public T GetContext<T>() where T : Context
+        public T GetContext<T>() where T : Context, new()
         {
             Type type = typeof(T);
             if (m_Contexts.TryGetValue(type, out var context))
@@ -23,29 +23,19 @@ namespace NFramework.ModuleSystem
                 return (T)context;
             }
 
-            context = CreateContext(type);
-            return (T)context;
+            return CreateContext<T>();
         }
 
         /// <summary>创建并注册一个 Context（已存在则直接返回已有实例）</summary>
-        public Context CreateContext(Type type)
+        public T CreateContext<T>() where T : Context, new()
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
+            Type type = typeof(T);
             if (m_Contexts.TryGetValue(type, out var exist))
             {
-                return exist;
+                return (T)exist;
             }
 
-            if (!typeof(Context).IsAssignableFrom(type))
-            {
-                throw new ArgumentException($"type {type} is not a Context", nameof(type));
-            }
-
-            var context = Activator.CreateInstance(type) as Context;
+            var context = new T();
             context.Awake();
 
             m_Contexts.Add(type, context);
@@ -55,11 +45,6 @@ namespace NFramework.ModuleSystem
             }
 
             return context;
-        }
-
-        public T CreateContext<T>() where T : Context
-        {
-            return (T)CreateContext(typeof(T));
         }
 
         public bool HasContext<T>() where T : Context
