@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c163841e54cf664b80a678a49021cb4, type: 3}
+  m_Name: ACSettings
+  m_EditorClassIdentifier: 
+  snapping: 1
+  colors:
+  - {r: 0.9607843, g: 0.29803923, b: 0.29803923, a: 1}
+  - {r: 0.78431374, g: 0.6745098, b: 0.19607843, a: 1}
+  - {r: 0.07058824, g: 0.54901963, b: 0.24313726, a: 1}
+  - {r: 0.32156864, g: 0.65882355, b: 0.9529412, a: 1}
+  - {r: 0.19607843, g: 0.45882353, b: 0.78431374, a: 1}
+  - {r: 0.32941177, g: 0.19607843, b: 0.78431374, a: 1}
+  - {r: 0.6117647, g: 0.19607843, b: 0.78431374, a: 1}
+  - {r: 0.78431374, g: 0.19607843, b: 0.24705882, a: 1}
+  - {r: 0.67058825, g: 0.9607843, b: 0.3882353, a: 1}
+  - {r: 0.09411765, g: 0.74509805, b: 0.9529412, a: 1}

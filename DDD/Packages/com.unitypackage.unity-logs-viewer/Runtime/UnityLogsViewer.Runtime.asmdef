@@ -1,0 +1,16 @@
+{
+    "name": "UnityLogsViewer.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:0c1e7669cbd0c9744a16e58511912bbd"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,7 @@
+<<<Bind>>>
+            this.BindClick({{FieldName}}, {{ClickMethodName}});
+<<<Event>>>
+        private void {{ClickMethodName}}({{TypeFullName}} inButton)
+        {
+            Debug.Log("{{FieldName}} Clicked");
+        }

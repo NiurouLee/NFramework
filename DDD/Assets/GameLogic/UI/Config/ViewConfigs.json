@@ -1,0 +1,20 @@
+{
+    "Configs": [
+        {
+            "ID": "ExampleExwindow",
+            "Namespace": "",
+            "AssetID": "Exwindow",
+            "Layer": 0,
+            "IsWindow": true,
+            "IsFixedLayer": false
+        },
+        {
+            "ID": "MainWindow",
+            "Namespace": "",
+            "AssetID": "MainWindow",
+            "Layer": 0,
+            "IsWindow": true,
+            "IsFixedLayer": false
+        }
+    ]
+}

@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="header" style="background-color: rgba(0, 0, 0, 0.2); height: 35px; justify-content: center;">
+        <ui:Label text="Title" display-tooltip-when-elided="true" name="title" style="flex-shrink: 1; flex-grow: 1; -unity-font-style: bold; font-size: 15px; -unity-text-align: middle-center;" />
+        <ui:VisualElement name="buttons" style="position: absolute; right: 5px; flex-direction: row; align-items: center; width: 78px;">
+            <ui:Button text="*" display-tooltip-when-elided="true" name="header-button" class="om-btn" style="position: absolute; right: 5px;" />
+            <ui:Button text="Edit" display-tooltip-when-elided="true" name="edit-script-btn" class="om-btn" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="tool-tip" style="background-color: rgb(67, 67, 67); min-height: 20px; padding-left: 8px; padding-right: 8px; padding-top: 8px; padding-bottom: 8px; margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-top-left-radius: 10px; border-bottom-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; flex-direction: row; align-items: center; display: none;">
+        <ui:VisualElement name="icon" style="width: 25px; height: 25px;" />
+        <ui:Label text="This is a Tooltip&#10;This is a Tooltip&#10;This is a Tooltip&#10;This is a Tooltip&#10;This is a Tooltip" display-tooltip-when-elided="true" name="text" style="flex-grow: 1; flex-direction: row; -unity-text-align: middle-left; padding-left: 5px; -unity-font-style: bold;" />
+    </ui:VisualElement>
+</ui:UXML>
