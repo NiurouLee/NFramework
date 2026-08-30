@@ -1,6 +1,6 @@
 using   NFramework.ModuleSystem;
 
-namespace NFramework.ModuleSystem.Module.EventModule
+namespace NFramework.ModuleSystem
 {
     public partial class EventSchedule
     {

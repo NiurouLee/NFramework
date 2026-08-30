@@ -53,31 +53,4 @@ namespace NFramework.ModuleSystem
             this.SceneManager.ReleaseAll();
         }
     }
-
-    /// <summary>
-    /// SceneComponent 扩展：便捷地在 Entity 上取用场景加载组件
-    /// </summary>
-    public static class SceneComponentExtensions
-    {
-        public static SceneComponent GetOrAddSceneComponent(this Entity inEntity)
-        {
-            if (inEntity.TryGetComponent<SceneComponent>(out var component))
-            {
-                return component;
-            }
-
-            return inEntity.AddComponent<SceneComponent>();
-        }
-
-        public static UniTask<bool> LoadSceneAsync(this Entity inEntity, string scenePath,
-            LoadSceneMode loadMode, uint priority = 0, Action<float> onProgress = null)
-        {
-            return inEntity.GetOrAddSceneComponent().LoadSceneAsync(scenePath, loadMode, priority, onProgress);
-        }
-
-        public static UniTask<bool> UnloadSceneAsync(this Entity inEntity, string scenePath)
-        {
-            return inEntity.GetOrAddSceneComponent().UnloadSceneAsync(scenePath);
-        }
-    }
 }

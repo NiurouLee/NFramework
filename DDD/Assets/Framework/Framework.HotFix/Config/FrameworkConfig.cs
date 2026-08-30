@@ -8,7 +8,7 @@ namespace NFramework
     /// 该资产由资源管线（YooAsset）加载，资源名见 BootConfig.FrameworkConfigAssetName，
     /// 加载后赋值给 NFROOT.Config。
     /// </summary>
-    [CreateAssetMenu(fileName = "FrameworkConfig", menuName = "XHFramework/FrameworkConfig")]
+    [CreateAssetMenu(fileName = "FrameworkConfig", menuName = "NFramework/FrameworkConfig")]
     public class FrameworkConfig : ScriptableObject
     {
         public UISystemConfig UISystemConfig;

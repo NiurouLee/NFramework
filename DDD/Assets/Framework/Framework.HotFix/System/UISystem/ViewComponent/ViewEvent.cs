@@ -1,4 +1,4 @@
-using NFramework.ModuleSystem.Module.EventModule;
+using NFramework.ModuleSystem;
 using   NFramework.ModuleSystem;
 
 namespace NFramework.ModuleSystem

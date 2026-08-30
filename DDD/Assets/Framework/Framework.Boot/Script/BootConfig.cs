@@ -4,9 +4,9 @@ namespace NFramework.Boot
     {
         public static readonly string packageName = "DefaultPackage";
 
-        public static readonly string packageUrl = "http://192.168.1.167:8084/XHFramework/Res/";
+        public static readonly string packageUrl = "http://192.168.1.167:8084/NFramework/Res/";
 
-        public static readonly string hotUpdateDllName = "XHFramework.Game.dll";
+        public static readonly string hotUpdateDllName = "Game.Logic.dll";
 
         public static readonly string hotUpdateEntryScript = "Game.Logic.Game";
 

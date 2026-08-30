@@ -43,8 +43,8 @@ MonoBehaviour:
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/GameLogic/GameLoic.asmdef
-        CollectorGUID: 828baa8d7838944488a2ebf2ba9f4a88
+      - CollectPath: Assets/PackageAssets/JITDLL
+        CollectorGUID: e8da46675b705d84da51868833e16c56
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackGroup
@@ -69,12 +69,12 @@ MonoBehaviour:
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/PackageAssets/Prefabs
-        CollectorGUID: 45911e7e3fea55d44bb6c442cfaef5f1
+      - CollectPath: Assets/PackageAssets/Prefabs/UI
+        CollectorGUID: 181eabb67bfd8f549aaaa4d426839bc8
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
+        FilterRuleName: CollectPrefab
         AssetTags: 
         UserData: 
     - GroupName: Font
@@ -97,14 +97,6 @@ MonoBehaviour:
       Collectors:
       - CollectPath: Assets/Framework/Framework.Config
         CollectorGUID: 965e61cf401176045bf13bc418902795
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-      - CollectPath: Assets/Framework/Framework.HotFix/Framework.asmdef
-        CollectorGUID: 040a3ed940b07de47a0d3e841c2301af
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory

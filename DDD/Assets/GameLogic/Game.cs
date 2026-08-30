@@ -4,7 +4,7 @@ using NFramework.Boot;
 using NFramework.ModuleSystem;
 using UnityEngine;
 using YooAsset;
-using XHFramework.Game.ConfigReader;
+using NFramework.Game.ConfigReader;
 
 
 namespace Game.Logic

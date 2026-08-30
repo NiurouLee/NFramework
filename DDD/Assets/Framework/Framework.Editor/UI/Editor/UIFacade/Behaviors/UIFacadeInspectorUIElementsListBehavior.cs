@@ -53,7 +53,8 @@ namespace NFramework.ModuleSystem
             {
                 Name = GetUniqueCopyName(facade, source.Name),
                 Component = source.Component,
-                Desc = source.Desc
+                Desc = source.Desc,
+                GenerateClickEvent = source.GenerateClickEvent
             };
 
             facade.m_UIElements.Insert(index + 1, copy);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
-namespace XHFramework.Core {
+namespace NFramework.Core {
 
 /// <summary>
 /// 日志级别定义

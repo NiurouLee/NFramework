@@ -1,4 +1,4 @@
-namespace NFramework.ModuleSystem.Module.EventModule
+namespace NFramework.ModuleSystem
 {
     public interface IEvent
     {

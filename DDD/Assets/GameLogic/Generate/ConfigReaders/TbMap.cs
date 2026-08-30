@@ -11,22 +11,22 @@ using Luban;
 using  NFramework.ModuleSystem;
 
 
-namespace XHFramework.Game.ConfigReader
+namespace NFramework.Game.ConfigReader
 {
-public partial class TbMap : IConfig<global::XHFramework.Game.TableMap>
+public partial class TbMap : IConfig<global::NFramework.Game.TableMap>
 {
-    private System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableMap> _dataMap;
-    private System.Collections.Generic.List<global::XHFramework.Game.TableMap> _dataList;
+    private System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableMap> _dataMap;
+    private System.Collections.Generic.List<global::NFramework.Game.TableMap> _dataList;
 
     public void LoadData(ByteBuf _buf)
     {
         int n = _buf.ReadSize();
-        _dataMap = new System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableMap>(n);
-        _dataList = new System.Collections.Generic.List<global::XHFramework.Game.TableMap>(n);
+        _dataMap = new System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableMap>(n);
+        _dataList = new System.Collections.Generic.List<global::NFramework.Game.TableMap>(n);
         for (int i = n; i > 0; --i)
         {
-            global::XHFramework.Game.TableMap _v;
-            _v = global::XHFramework.Game.TableMap.DeserializeTableMap(_buf);
+            global::NFramework.Game.TableMap _v;
+            _v = global::NFramework.Game.TableMap.DeserializeTableMap(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.Id, _v);
         }
@@ -35,17 +35,17 @@ public partial class TbMap : IConfig<global::XHFramework.Game.TableMap>
     public static TbMap Create() => new TbMap();
 
     // IConfig<T>
-    public global::XHFramework.Game.TableMap Get(int id) => _dataMap[id];
-    public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableMap> GetAll() => _dataMap;
+    public global::NFramework.Game.TableMap Get(int id) => _dataMap[id];
+    public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableMap> GetAll() => _dataMap;
     public System.Collections.IDictionary GetDic() => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableMap> GetList() => _dataList;
-    public global::XHFramework.Game.TableMap GetBean() => throw new System.NotSupportedException("TbMap is a map table, use Get(id).");
+    public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableMap> GetList() => _dataList;
+    public global::NFramework.Game.TableMap GetBean() => throw new System.NotSupportedException("TbMap is a map table, use Get(id).");
 
     // Convenience helpers
-    public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableMap> DataMap => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableMap> DataList => _dataList;
-    public global::XHFramework.Game.TableMap GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
-    public global::XHFramework.Game.TableMap this[int key] => _dataMap[key];
+    public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableMap> DataMap => _dataMap;
+    public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableMap> DataList => _dataList;
+    public global::NFramework.Game.TableMap GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
+    public global::NFramework.Game.TableMap this[int key] => _dataMap[key];
 
     public void ResolveRef(TablesReader tables) { }
 

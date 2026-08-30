@@ -92,11 +92,11 @@ namespace NFramework.ModuleSystem
 
             if (addedCount > 0)
             {
-                EditorUtility.DisplayDialog("成功", $"已自动收集 {addedCount} 个UI组件", "确定");
+                Debug.Log($"[UIFacade] 已自动收集 {addedCount} 个UI组件");
             }
             else
             {
-                EditorUtility.DisplayDialog("提示", "没有找到新的UI组件", "确定");
+                Debug.Log("[UIFacade] 没有找到新的UI组件");
             }
         }
 
@@ -210,7 +210,7 @@ namespace NFramework.ModuleSystem
             }
             else
             {
-                EditorUtility.DisplayDialog("配置验证", "配置验证通过！", "确定");
+                Debug.Log("[UIFacade] 配置验证通过");
             }
         }
     }

@@ -1,5 +1,5 @@
 
-namespace NFramework.ModuleSystem.Module.EventModule
+namespace NFramework.ModuleSystem
 {
     public class EventSystem : FrameworkSystemModuleBase ,IEventScheduler
     {
@@ -56,6 +56,11 @@ namespace NFramework.ModuleSystem.Module.EventModule
         }
 
         public bool Check<T>(RefAction<T> callback, string channel) where T : IEvent
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Fire<T>(ref T @event) where T : IEvent
         {
             throw new System.NotImplementedException();
         }

@@ -16929,7 +16929,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mapName: Map1001
-  _exportPath: XHFramework.Game/PackageAssets/Config/Map/Map1001
+  _exportPath: NFramework.Game/PackageAssets/Config/Map/Map1001
   _pathfindingTilemap: {fileID: 6155391604793595017}
   _spawnPoint: {fileID: 7538479148796590628}
 --- !u!156049354 &3687763386557449049

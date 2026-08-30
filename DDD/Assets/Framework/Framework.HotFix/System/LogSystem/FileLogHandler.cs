@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace XHFramework.Core {
+namespace NFramework.Core {
 
 /// <summary>
 /// 文件日志处理器 - 线程安全版本
@@ -231,7 +231,7 @@ public class FileLogHandler : ILogHandler, IDisposable
     {
 #if UNITY_EDITOR
         string projectRoot = Directory.GetParent(UnityEngine.Application.dataPath).FullName;
-        return Path.Combine(projectRoot, "../XHFrameworkOut/Logs");
+        return Path.Combine(projectRoot, "../NFrameworkOut/Logs");
 #elif UNITY_STANDALONE || UNITY_ANDROID || UNITY_IOS
         return UnityEngine.Application.persistentDataPath + "/Logs/";
 #else

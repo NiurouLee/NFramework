@@ -1,6 +1,6 @@
 using System;
 
-namespace NFramework.ModuleSystem.Utils
+namespace NFramework.Utils
 {
     public static class RandomUtil
     {

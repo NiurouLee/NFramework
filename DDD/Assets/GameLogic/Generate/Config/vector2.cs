@@ -10,7 +10,7 @@
 using Luban;
 
 
-namespace XHFramework.Game
+namespace NFramework.Game
 {
 public partial struct vector2
 {

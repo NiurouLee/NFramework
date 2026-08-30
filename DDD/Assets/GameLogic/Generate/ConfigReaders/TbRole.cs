@@ -11,22 +11,22 @@ using Luban;
 using  NFramework.ModuleSystem;
 
 
-namespace XHFramework.Game.ConfigReader
+namespace NFramework.Game.ConfigReader
 {
-public partial class TbRole : IConfig<global::XHFramework.Game.TableRole>
+public partial class TbRole : IConfig<global::NFramework.Game.TableRole>
 {
-    private System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableRole> _dataMap;
-    private System.Collections.Generic.List<global::XHFramework.Game.TableRole> _dataList;
+    private System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableRole> _dataMap;
+    private System.Collections.Generic.List<global::NFramework.Game.TableRole> _dataList;
 
     public void LoadData(ByteBuf _buf)
     {
         int n = _buf.ReadSize();
-        _dataMap = new System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableRole>(n);
-        _dataList = new System.Collections.Generic.List<global::XHFramework.Game.TableRole>(n);
+        _dataMap = new System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableRole>(n);
+        _dataList = new System.Collections.Generic.List<global::NFramework.Game.TableRole>(n);
         for (int i = n; i > 0; --i)
         {
-            global::XHFramework.Game.TableRole _v;
-            _v = global::XHFramework.Game.TableRole.DeserializeTableRole(_buf);
+            global::NFramework.Game.TableRole _v;
+            _v = global::NFramework.Game.TableRole.DeserializeTableRole(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.Id, _v);
         }
@@ -35,17 +35,17 @@ public partial class TbRole : IConfig<global::XHFramework.Game.TableRole>
     public static TbRole Create() => new TbRole();
 
     // IConfig<T>
-    public global::XHFramework.Game.TableRole Get(int id) => _dataMap[id];
-    public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableRole> GetAll() => _dataMap;
+    public global::NFramework.Game.TableRole Get(int id) => _dataMap[id];
+    public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableRole> GetAll() => _dataMap;
     public System.Collections.IDictionary GetDic() => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableRole> GetList() => _dataList;
-    public global::XHFramework.Game.TableRole GetBean() => throw new System.NotSupportedException("TbRole is a map table, use Get(id).");
+    public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableRole> GetList() => _dataList;
+    public global::NFramework.Game.TableRole GetBean() => throw new System.NotSupportedException("TbRole is a map table, use Get(id).");
 
     // Convenience helpers
-    public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableRole> DataMap => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableRole> DataList => _dataList;
-    public global::XHFramework.Game.TableRole GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
-    public global::XHFramework.Game.TableRole this[int key] => _dataMap[key];
+    public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableRole> DataMap => _dataMap;
+    public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableRole> DataList => _dataList;
+    public global::NFramework.Game.TableRole GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
+    public global::NFramework.Game.TableRole this[int key] => _dataMap[key];
 
     public void ResolveRef(TablesReader tables) { }
 

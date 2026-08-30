@@ -252,7 +252,6 @@ namespace NFramework.ModuleSystem
                 return;
             }
 
-            EditorUtility.DisplayDialog("成功", $"ViewConfig已保存并生成类型注册表", "确定");
             Debug.Log($"ViewConfig已保存: {facade.m_ScriptName}");
         }
     }

@@ -11,22 +11,22 @@ using Luban;
 using  NFramework.ModuleSystem;
 
 
-namespace XHFramework.Game.ConfigReader
+namespace NFramework.Game.ConfigReader
 {
-public partial class TbMusic : IConfig<global::XHFramework.Game.TableMusic>
+public partial class TbMusic : IConfig<global::NFramework.Game.TableMusic>
 {
-    private System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableMusic> _dataMap;
-    private System.Collections.Generic.List<global::XHFramework.Game.TableMusic> _dataList;
+    private System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableMusic> _dataMap;
+    private System.Collections.Generic.List<global::NFramework.Game.TableMusic> _dataList;
 
     public void LoadData(ByteBuf _buf)
     {
         int n = _buf.ReadSize();
-        _dataMap = new System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableMusic>(n);
-        _dataList = new System.Collections.Generic.List<global::XHFramework.Game.TableMusic>(n);
+        _dataMap = new System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableMusic>(n);
+        _dataList = new System.Collections.Generic.List<global::NFramework.Game.TableMusic>(n);
         for (int i = n; i > 0; --i)
         {
-            global::XHFramework.Game.TableMusic _v;
-            _v = global::XHFramework.Game.TableMusic.DeserializeTableMusic(_buf);
+            global::NFramework.Game.TableMusic _v;
+            _v = global::NFramework.Game.TableMusic.DeserializeTableMusic(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.Id, _v);
         }
@@ -35,17 +35,17 @@ public partial class TbMusic : IConfig<global::XHFramework.Game.TableMusic>
     public static TbMusic Create() => new TbMusic();
 
     // IConfig<T>
-    public global::XHFramework.Game.TableMusic Get(int id) => _dataMap[id];
-    public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableMusic> GetAll() => _dataMap;
+    public global::NFramework.Game.TableMusic Get(int id) => _dataMap[id];
+    public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableMusic> GetAll() => _dataMap;
     public System.Collections.IDictionary GetDic() => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableMusic> GetList() => _dataList;
-    public global::XHFramework.Game.TableMusic GetBean() => throw new System.NotSupportedException("TbMusic is a map table, use Get(id).");
+    public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableMusic> GetList() => _dataList;
+    public global::NFramework.Game.TableMusic GetBean() => throw new System.NotSupportedException("TbMusic is a map table, use Get(id).");
 
     // Convenience helpers
-    public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableMusic> DataMap => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableMusic> DataList => _dataList;
-    public global::XHFramework.Game.TableMusic GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
-    public global::XHFramework.Game.TableMusic this[int key] => _dataMap[key];
+    public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableMusic> DataMap => _dataMap;
+    public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableMusic> DataList => _dataList;
+    public global::NFramework.Game.TableMusic GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
+    public global::NFramework.Game.TableMusic this[int key] => _dataMap[key];
 
     public void ResolveRef(TablesReader tables) { }
 

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using XHFramework.Core;
+using NFramework.Core;
 #if UNITY_EDITOR
 using Sirenix.OdinInspector;
 #endif

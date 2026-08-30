@@ -38,7 +38,15 @@ namespace NFramework.Boot
         // _jitServices.OnStepChange += patchWindow.OnStepChange;
         // _jitServices.OnError += patchWindow.OnError;
         AOTLog.Info("开始资源更新流程");
-        await yooAssetService.InitializeAndUpdate();
+        bool initSuccess = await yooAssetService.InitializeAndUpdate();
+        
+        if (!initSuccess)
+        {
+            // 资源初始化/更新失败时不能继续，否则热更入口会在没有激活清单的情况下
+            // 调用 YooAssets.LoadAssetSync 而报 “Can not found active package manifest !”
+            AOTLog.Error("YooAsset 初始化/更新失败，终止启动流程");
+            return;
+        }
 
         AOTLog.Info("开始代码更新流程");
         await _jitServices.StartJITUpdate();

@@ -70,12 +70,12 @@
     <type fullname="UnityEngine.Canvas" preserve="all" />
     <type fullname="UnityEngine.CanvasRenderer" preserve="all" />
   </assembly>
-  <assembly fullname="XHFramework.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-    <type fullname="XHFramework.Core.BindData" preserve="all" />
-    <type fullname="XHFramework.Core.MapPathfindingEditor" preserve="all" />
+  <assembly fullname="NFramework.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="NFramework.Core.BindData" preserve="all" />
+    <type fullname="NFramework.Core.MapPathfindingEditor" preserve="all" />
   </assembly>
-  <assembly fullname="XHFramework.Game, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-    <type fullname="XHFramework.Game.LoadingForm" preserve="all" />
+  <assembly fullname="NFramework.Game, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="NFramework.Game.LoadingForm" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.TextCoreFontEngineModule">
     <type fullname="UnityEngine.TextCore.FaceInfo" preserve="nothing" serialized="true" />

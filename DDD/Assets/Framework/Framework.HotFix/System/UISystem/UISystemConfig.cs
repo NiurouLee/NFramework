@@ -9,7 +9,7 @@ namespace NFramework.ModuleSystem
 {
     /// <summary>
     /// UI 系统配置：编辑器路径与生成物位置。
-    /// 作为 <see cref="XHFramework.FrameworkConfig"/> 的子配置统一管理，配置数据全部是实例字段。
+    /// 作为 <see cref="NFramework.FrameworkConfig"/> 的子配置统一管理，配置数据全部是实例字段。
     /// </summary>
     public class UISystemConfig : ScriptableObject
     {

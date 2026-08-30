@@ -10,6 +10,15 @@ using Cysharp.Threading.Tasks;
 
 namespace NFramework.Boot
 {
+    /*
+     * HybridCLR/CompileDll/ActiveBuildTarget —— 编译热更 dll（HotUpdateDlls/{平台}）
+     *HybridCLR/Generate/Il2CppDef —— 生成 il2cpp 补丁定义
+     *HybridCLR/Generate/LinkXml —— 依赖第 1 步的热更 dll
+     *HybridCLR/Generate/AOTDlls —— 剥离 AOT dll（依赖 IL2CPP，内部跑一次构建）
+     *HybridCLR/Generate/MethodBridge —— 依赖第 4 步的 AOT dll
+     *HybridCLR/Generate/AOTGenericReference —— 依赖第 1 步 + 第 4 步
+     */
+
     public class HybridClrService : IJITServices
     {
         private readonly string _hotUpdateAssemblyName;

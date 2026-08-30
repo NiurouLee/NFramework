@@ -11,22 +11,22 @@ using Luban;
 using  NFramework.ModuleSystem;
 
 
-namespace XHFramework.Game.ConfigReader
+namespace NFramework.Game.ConfigReader
 {
-public partial class TbTankMap : IConfig<global::XHFramework.Game.TableTankMap>
+public partial class TbTankMap : IConfig<global::NFramework.Game.TableTankMap>
 {
-    private System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableTankMap> _dataMap;
-    private System.Collections.Generic.List<global::XHFramework.Game.TableTankMap> _dataList;
+    private System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableTankMap> _dataMap;
+    private System.Collections.Generic.List<global::NFramework.Game.TableTankMap> _dataList;
 
     public void LoadData(ByteBuf _buf)
     {
         int n = _buf.ReadSize();
-        _dataMap = new System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableTankMap>(n);
-        _dataList = new System.Collections.Generic.List<global::XHFramework.Game.TableTankMap>(n);
+        _dataMap = new System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableTankMap>(n);
+        _dataList = new System.Collections.Generic.List<global::NFramework.Game.TableTankMap>(n);
         for (int i = n; i > 0; --i)
         {
-            global::XHFramework.Game.TableTankMap _v;
-            _v = global::XHFramework.Game.TableTankMap.DeserializeTableTankMap(_buf);
+            global::NFramework.Game.TableTankMap _v;
+            _v = global::NFramework.Game.TableTankMap.DeserializeTableTankMap(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.Id, _v);
         }
@@ -35,17 +35,17 @@ public partial class TbTankMap : IConfig<global::XHFramework.Game.TableTankMap>
     public static TbTankMap Create() => new TbTankMap();
 
     // IConfig<T>
-    public global::XHFramework.Game.TableTankMap Get(int id) => _dataMap[id];
-    public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableTankMap> GetAll() => _dataMap;
+    public global::NFramework.Game.TableTankMap Get(int id) => _dataMap[id];
+    public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableTankMap> GetAll() => _dataMap;
     public System.Collections.IDictionary GetDic() => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableTankMap> GetList() => _dataList;
-    public global::XHFramework.Game.TableTankMap GetBean() => throw new System.NotSupportedException("TbTankMap is a map table, use Get(id).");
+    public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableTankMap> GetList() => _dataList;
+    public global::NFramework.Game.TableTankMap GetBean() => throw new System.NotSupportedException("TbTankMap is a map table, use Get(id).");
 
     // Convenience helpers
-    public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableTankMap> DataMap => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableTankMap> DataList => _dataList;
-    public global::XHFramework.Game.TableTankMap GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
-    public global::XHFramework.Game.TableTankMap this[int key] => _dataMap[key];
+    public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableTankMap> DataMap => _dataMap;
+    public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableTankMap> DataList => _dataList;
+    public global::NFramework.Game.TableTankMap GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
+    public global::NFramework.Game.TableTankMap this[int key] => _dataMap[key];
 
     public void ResolveRef(TablesReader tables) { }
 

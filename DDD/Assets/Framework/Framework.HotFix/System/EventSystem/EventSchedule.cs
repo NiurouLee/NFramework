@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using  NFramework.Core;
 
-namespace NFramework.ModuleSystem.Module.EventModule
+namespace NFramework.ModuleSystem
 {
     public partial class EventSchedule : NObject, IEventScheduler
     {
@@ -174,5 +174,7 @@ namespace NFramework.ModuleSystem.Module.EventModule
                 m_CachedNodes.Remove(type);
             }
         }
+
+      
     }
 }

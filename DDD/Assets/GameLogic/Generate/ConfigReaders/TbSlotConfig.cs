@@ -11,22 +11,22 @@ using Luban;
 using  NFramework.ModuleSystem;
 
 
-namespace XHFramework.Game.ConfigReader
+namespace NFramework.Game.ConfigReader
 {
-public partial class TbSlotConfig : IConfig<global::XHFramework.Game.TableSlotConfig>
+public partial class TbSlotConfig : IConfig<global::NFramework.Game.TableSlotConfig>
 {
-    private System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableSlotConfig> _dataMap;
-    private System.Collections.Generic.List<global::XHFramework.Game.TableSlotConfig> _dataList;
+    private System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableSlotConfig> _dataMap;
+    private System.Collections.Generic.List<global::NFramework.Game.TableSlotConfig> _dataList;
 
     public void LoadData(ByteBuf _buf)
     {
         int n = _buf.ReadSize();
-        _dataMap = new System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableSlotConfig>(n);
-        _dataList = new System.Collections.Generic.List<global::XHFramework.Game.TableSlotConfig>(n);
+        _dataMap = new System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableSlotConfig>(n);
+        _dataList = new System.Collections.Generic.List<global::NFramework.Game.TableSlotConfig>(n);
         for (int i = n; i > 0; --i)
         {
-            global::XHFramework.Game.TableSlotConfig _v;
-            _v = global::XHFramework.Game.TableSlotConfig.DeserializeTableSlotConfig(_buf);
+            global::NFramework.Game.TableSlotConfig _v;
+            _v = global::NFramework.Game.TableSlotConfig.DeserializeTableSlotConfig(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.Id, _v);
         }
@@ -35,17 +35,17 @@ public partial class TbSlotConfig : IConfig<global::XHFramework.Game.TableSlotCo
     public static TbSlotConfig Create() => new TbSlotConfig();
 
     // IConfig<T>
-    public global::XHFramework.Game.TableSlotConfig Get(int id) => _dataMap[id];
-    public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableSlotConfig> GetAll() => _dataMap;
+    public global::NFramework.Game.TableSlotConfig Get(int id) => _dataMap[id];
+    public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableSlotConfig> GetAll() => _dataMap;
     public System.Collections.IDictionary GetDic() => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableSlotConfig> GetList() => _dataList;
-    public global::XHFramework.Game.TableSlotConfig GetBean() => throw new System.NotSupportedException("TbSlotConfig is a map table, use Get(id).");
+    public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableSlotConfig> GetList() => _dataList;
+    public global::NFramework.Game.TableSlotConfig GetBean() => throw new System.NotSupportedException("TbSlotConfig is a map table, use Get(id).");
 
     // Convenience helpers
-    public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableSlotConfig> DataMap => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableSlotConfig> DataList => _dataList;
-    public global::XHFramework.Game.TableSlotConfig GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
-    public global::XHFramework.Game.TableSlotConfig this[int key] => _dataMap[key];
+    public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableSlotConfig> DataMap => _dataMap;
+    public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableSlotConfig> DataList => _dataList;
+    public global::NFramework.Game.TableSlotConfig GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
+    public global::NFramework.Game.TableSlotConfig this[int key] => _dataMap[key];
 
     public void ResolveRef(TablesReader tables) { }
 

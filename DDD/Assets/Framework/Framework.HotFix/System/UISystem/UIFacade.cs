@@ -92,6 +92,9 @@ namespace NFramework.ModuleSystem
 
             // 描述，用于生成备注
             public string Desc;
+
+            // 是否生成点击事件（仅对可交互组件有意义）
+            public bool GenerateClickEvent = true;
         }
 
         [SerializeField, HideInInspector] public List<UIElement> m_UIElements = new List<UIElement>();

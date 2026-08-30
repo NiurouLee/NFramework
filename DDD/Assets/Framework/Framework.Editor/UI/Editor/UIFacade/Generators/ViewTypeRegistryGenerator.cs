@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using UnityEditor;
 
-using XHFramework;
+using NFramework;
 namespace NFramework.ModuleSystem
 {
     /// <summary>

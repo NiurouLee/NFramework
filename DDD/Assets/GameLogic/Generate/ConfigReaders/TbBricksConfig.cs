@@ -10,22 +10,22 @@ using Luban;
 using NFramework.ModuleSystem;
 
 
-namespace XHFramework.Game.ConfigReader
+namespace NFramework.Game.ConfigReader
 {
-    public partial class TbBricksConfig : IConfig<global::XHFramework.Game.TableBricksConfig>
+    public partial class TbBricksConfig : IConfig<global::NFramework.Game.TableBricksConfig>
     {
-        private System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableBricksConfig> _dataMap;
-        private System.Collections.Generic.List<global::XHFramework.Game.TableBricksConfig> _dataList;
+        private System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableBricksConfig> _dataMap;
+        private System.Collections.Generic.List<global::NFramework.Game.TableBricksConfig> _dataList;
 
         public void LoadData(ByteBuf _buf)
         {
             int n = _buf.ReadSize();
-            _dataMap = new System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableBricksConfig>(n);
-            _dataList = new System.Collections.Generic.List<global::XHFramework.Game.TableBricksConfig>(n);
+            _dataMap = new System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableBricksConfig>(n);
+            _dataList = new System.Collections.Generic.List<global::NFramework.Game.TableBricksConfig>(n);
             for (int i = n; i > 0; --i)
             {
-                global::XHFramework.Game.TableBricksConfig _v;
-                _v = global::XHFramework.Game.TableBricksConfig.DeserializeTableBricksConfig(_buf);
+                global::NFramework.Game.TableBricksConfig _v;
+                _v = global::NFramework.Game.TableBricksConfig.DeserializeTableBricksConfig(_buf);
                 _dataList.Add(_v);
                 _dataMap.Add(_v.Id, _v);
             }
@@ -34,30 +34,30 @@ namespace XHFramework.Game.ConfigReader
         public static TbBricksConfig Create() => new TbBricksConfig();
 
         // IConfig<T>
-        public global::XHFramework.Game.TableBricksConfig Get(int id) => _dataMap[id];
+        public global::NFramework.Game.TableBricksConfig Get(int id) => _dataMap[id];
 
-        public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableBricksConfig>
+        public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableBricksConfig>
             GetAll() => _dataMap;
 
         public System.Collections.IDictionary GetDic() => _dataMap;
 
-        public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableBricksConfig> GetList() =>
+        public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableBricksConfig> GetList() =>
             _dataList;
 
-        public global::XHFramework.Game.TableBricksConfig GetBean() =>
+        public global::NFramework.Game.TableBricksConfig GetBean() =>
             throw new System.NotSupportedException("TbBricksConfig is a map table, use Get(id).");
 
         // Convenience helpers
-        public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableBricksConfig>
+        public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableBricksConfig>
             DataMap => _dataMap;
 
-        public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableBricksConfig> DataList =>
+        public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableBricksConfig> DataList =>
             _dataList;
 
-        public global::XHFramework.Game.TableBricksConfig GetOrDefault(int key) =>
+        public global::NFramework.Game.TableBricksConfig GetOrDefault(int key) =>
             _dataMap.TryGetValue(key, out var v) ? v : default;
 
-        public global::XHFramework.Game.TableBricksConfig this[int key] => _dataMap[key];
+        public global::NFramework.Game.TableBricksConfig this[int key] => _dataMap[key];
 
         public void ResolveRef(TablesReader tables)
         {

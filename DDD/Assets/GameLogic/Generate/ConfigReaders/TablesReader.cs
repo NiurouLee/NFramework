@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using NFramework.ModuleSystem;
 
-namespace XHFramework.Game.ConfigReader
+namespace NFramework.Game.ConfigReader
 {
 public partial class TablesReader
 {
@@ -60,21 +60,21 @@ public partial class TablesReader
     public static readonly IReadOnlyDictionary<Type, TableInfo> Registry =
         new Dictionary<Type, TableInfo>
         {
-            [typeof(global::XHFramework.Game.TableBricksConfig)] = new TableInfo("tbbricksconfig", TbBricksConfig.Create),
-            [typeof(global::XHFramework.Game.TableBricksMap)] = new TableInfo("tbbricksmap", TbBricksMap.Create),
-            [typeof(global::XHFramework.Game.TableEntity)] = new TableInfo("tbentity", TbEntity.Create),
-            [typeof(global::XHFramework.Game.TableLocalizationText)] = new TableInfo("tblocalizationtext", TbLocalizationText.Create),
-            [typeof(global::XHFramework.Game.TableMap)] = new TableInfo("tbmap", TbMap.Create),
-            [typeof(global::XHFramework.Game.TableMapLevelConfig)] = new TableInfo("tbmaplevelconfig", TbMapLevelConfig.Create),
-            [typeof(global::XHFramework.Game.TableMusic)] = new TableInfo("tbmusic", TbMusic.Create),
-            [typeof(global::XHFramework.Game.TableRole)] = new TableInfo("tbrole", TbRole.Create),
-            [typeof(global::XHFramework.Game.TableScene)] = new TableInfo("tbscene", TbScene.Create),
-            [typeof(global::XHFramework.Game.TableSlotConfig)] = new TableInfo("tbslotconfig", TbSlotConfig.Create),
-            [typeof(global::XHFramework.Game.TableSlotMap)] = new TableInfo("tbslotmap", TbSlotMap.Create),
-            [typeof(global::XHFramework.Game.TableSound)] = new TableInfo("tbsound", TbSound.Create),
-            [typeof(global::XHFramework.Game.TableTankConfig)] = new TableInfo("tbtankconfig", TbTankConfig.Create),
-            [typeof(global::XHFramework.Game.TableTankMap)] = new TableInfo("tbtankmap", TbTankMap.Create),
-            [typeof(global::XHFramework.Game.TableUISound)] = new TableInfo("tbuisound", TbUISound.Create),
+            [typeof(global::NFramework.Game.TableBricksConfig)] = new TableInfo("tbbricksconfig", TbBricksConfig.Create),
+            [typeof(global::NFramework.Game.TableBricksMap)] = new TableInfo("tbbricksmap", TbBricksMap.Create),
+            [typeof(global::NFramework.Game.TableEntity)] = new TableInfo("tbentity", TbEntity.Create),
+            [typeof(global::NFramework.Game.TableLocalizationText)] = new TableInfo("tblocalizationtext", TbLocalizationText.Create),
+            [typeof(global::NFramework.Game.TableMap)] = new TableInfo("tbmap", TbMap.Create),
+            [typeof(global::NFramework.Game.TableMapLevelConfig)] = new TableInfo("tbmaplevelconfig", TbMapLevelConfig.Create),
+            [typeof(global::NFramework.Game.TableMusic)] = new TableInfo("tbmusic", TbMusic.Create),
+            [typeof(global::NFramework.Game.TableRole)] = new TableInfo("tbrole", TbRole.Create),
+            [typeof(global::NFramework.Game.TableScene)] = new TableInfo("tbscene", TbScene.Create),
+            [typeof(global::NFramework.Game.TableSlotConfig)] = new TableInfo("tbslotconfig", TbSlotConfig.Create),
+            [typeof(global::NFramework.Game.TableSlotMap)] = new TableInfo("tbslotmap", TbSlotMap.Create),
+            [typeof(global::NFramework.Game.TableSound)] = new TableInfo("tbsound", TbSound.Create),
+            [typeof(global::NFramework.Game.TableTankConfig)] = new TableInfo("tbtankconfig", TbTankConfig.Create),
+            [typeof(global::NFramework.Game.TableTankMap)] = new TableInfo("tbtankmap", TbTankMap.Create),
+            [typeof(global::NFramework.Game.TableUISound)] = new TableInfo("tbuisound", TbUISound.Create),
         };
 
     // -------------------------------------------------------

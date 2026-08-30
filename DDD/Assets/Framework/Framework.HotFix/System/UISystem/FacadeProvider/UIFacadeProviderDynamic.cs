@@ -1,12 +1,11 @@
 using System;
-using Codice.Client.BaseCommands.BranchExplorer;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace NFramework.ModuleSystem
 {
     /// <summary>
-    /// uiFacade 提供者
+    /// uiFacade 动态加载逻辑
     /// </summary>
     public class UIFacadeProviderDynamic : ViewComponent, IUIFacadeProvider
     {

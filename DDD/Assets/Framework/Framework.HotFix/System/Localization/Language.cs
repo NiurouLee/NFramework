@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace XHFramework.Core {
+namespace NFramework.Core {
 
 /// <summary>
 /// 本地化语言

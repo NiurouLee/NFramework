@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace XHFramework.Core {
+namespace NFramework.Core {
 
 /// <summary>
 /// 控制台日志处理器

@@ -1,5 +1,5 @@
 using System;
-using XHFramework.Core;
+using NFramework.Core;
 using   NFramework.ModuleSystem;
 
 namespace NFramework.ModuleSystem

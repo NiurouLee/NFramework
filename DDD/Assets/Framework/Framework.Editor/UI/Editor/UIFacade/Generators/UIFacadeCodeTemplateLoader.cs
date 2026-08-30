@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
-using XHFramework;
+using NFramework;
 namespace NFramework.ModuleSystem
 {
     /// <summary>
@@ -62,7 +62,7 @@ namespace NFramework.ModuleSystem
             if (File.Exists(primary))
                 return File.ReadAllText(primary, Encoding.UTF8);
 
-            string legacy = Path.Combine(Application.dataPath, "XHFramework.Game/HotUpdateScripts/UI/Template/UIFacadeTemplate.txt");
+            string legacy = Path.Combine(Application.dataPath, "NFramework.Game/HotUpdateScripts/UI/Template/UIFacadeTemplate.txt");
             if (File.Exists(legacy))
                 return File.ReadAllText(legacy, Encoding.UTF8);
 

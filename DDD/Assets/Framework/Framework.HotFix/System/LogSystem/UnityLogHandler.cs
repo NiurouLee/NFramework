@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using UnityEngine;
 
-namespace XHFramework.Core {
+namespace NFramework.Core {
 
 /// <summary>
 /// Unity日志处理器

@@ -1,6 +1,6 @@
 using System;
 
-namespace XHFramework.Core {
+namespace NFramework.Core {
 
 /// <summary>
 /// 指针事件类型枚举

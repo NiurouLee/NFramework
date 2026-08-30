@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace NFramework.ModuleSystem
 {
@@ -184,16 +185,14 @@ namespace NFramework.ModuleSystem
             Component component = GetSingleAddableComponent(go);
             if (component == null)
             {
-                EditorUtility.DisplayDialog("提示",
-                    $"物体 '{go.name}' 上没有可加入的组件。", "确定");
+                Debug.Log($"[UIFacade] 物体 '{go.name}' 上没有可加入的组件。");
                 return;
             }
 
             int added = UIFacadeInspectorUIElementBehavior.AddUIComponentCandidates(facade, new[] { component });
             if (added == 0)
             {
-                EditorUtility.DisplayDialog("提示",
-                    $"物体 '{go.name}' 的组件已在列表中。", "确定");
+                Debug.Log($"[UIFacade] 物体 '{go.name}' 的组件已在列表中。");
             }
         }
 
@@ -204,7 +203,20 @@ namespace NFramework.ModuleSystem
                 return null;
             }
 
-            // 优先只加 RectTransform（UI 物体上都有）
+            // 优先加列表类组件（LoopScrollRect 系列 / UGUI ScrollRect），避免误加 RectTransform
+            var loopScroll = go.GetComponent<LoopScrollRectBase>();
+            if (loopScroll != null && UIFacadeElementRules.CanAddToElementList(loopScroll))
+            {
+                return loopScroll;
+            }
+
+            var uguiScroll = go.GetComponent<ScrollRect>();
+            if (uguiScroll != null && UIFacadeElementRules.CanAddToElementList(uguiScroll))
+            {
+                return uguiScroll;
+            }
+
+            // 其次再取 RectTransform（UI 物体上都有）
             RectTransform rectTransform = go.GetComponent<RectTransform>();
             if (rectTransform != null && UIFacadeElementRules.CanAddToElementList(rectTransform))
             {

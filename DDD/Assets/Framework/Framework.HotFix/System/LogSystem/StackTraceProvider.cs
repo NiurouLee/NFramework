@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Reflection;
 
-namespace XHFramework.Core {
+namespace NFramework.Core {
 
 /// <summary>
 /// 增强的堆栈信息提供器

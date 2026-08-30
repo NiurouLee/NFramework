@@ -1,0 +1,440 @@
+{
+    "root": {
+        "data": {
+            "id": "dbzlsxqxsig0",
+            "created": 1754916002240,
+            "text": "CombatEntiyt"
+        },
+        "children": [
+            {
+                "data": {
+                    "id": "dbzltaafwm80",
+                    "created": 1754916029541,
+                    "text": "TransformComponent",
+                    "layout_mind_offset": {
+                        "x": 564.7499930895863,
+                        "y": -546.7499958463013
+                    }
+                },
+                "children": []
+            },
+            {
+                "data": {
+                    "id": "dbzluetjhbs0",
+                    "created": 1754916117767,
+                    "text": "OracComponent",
+                    "layout_mind_offset": {
+                        "x": 312.2499993853271,
+                        "y": -540.9999960511922
+                    }
+                },
+                "children": []
+            },
+            {
+                "data": {
+                    "id": "dbzlv48t4880",
+                    "created": 1754916173110,
+                    "text": "AABBComponent",
+                    "layout_mind_offset": {
+                        "x": 303.7499971874056,
+                        "y": -766.2499966286122
+                    }
+                },
+                "children": []
+            },
+            {
+                "data": {
+                    "id": "dbzlumv5rvs0",
+                    "created": 1754916135279,
+                    "text": "AnimationComponent",
+                    "layout_mind_offset": {
+                        "x": 296.7499986030159,
+                        "y": -749.9999967962502
+                    }
+                },
+                "children": []
+            },
+            {
+                "data": {
+                    "id": "dbzly61xjio0",
+                    "created": 1754916412140,
+                    "text": "MotionComponent",
+                    "layout_mind_offset": {
+                        "x": 1110.2499946914616,
+                        "y": -403.74999882653356
+                    }
+                },
+                "children": []
+            },
+            {
+                "data": {
+                    "id": "dc03kj5aa4g0",
+                    "created": 1754966123521,
+                    "text": "Component",
+                    "expandState": "expand",
+                    "layout_mind_offset": {
+                        "x": 1331.9999912828205,
+                        "y": -335.7499962933359
+                    }
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "dc03bkv6sww0",
+                            "created": 1754965421987,
+                            "text": "SpellSkillComponent",
+                            "layout_mind_offset": {
+                                "x": 904,
+                                "y": 85
+                            },
+                            "expandState": "expand",
+                            "layout_left_offset": {
+                                "x": 3,
+                                "y": -16
+                            },
+                            "layout_right_offset": {
+                                "x": 350.25000020489074,
+                                "y": 60.24999960884452
+                            }
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "dc03bfacle80",
+                            "created": 1754965409843,
+                            "text": "ItemComponent",
+                            "layout_mind_offset": {
+                                "x": 937,
+                                "y": 85
+                            },
+                            "expandState": "expand",
+                            "layout_right_offset": {
+                                "x": 439.49999891966604,
+                                "y": 55.499999664723816
+                            }
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "dc03e46vjh40",
+                                    "created": 1754965620781,
+                                    "text": "ItemDict<int,ItemAbility>",
+                                    "layout_right_offset": {
+                                        "x": 157.7500032968819,
+                                        "y": -7.000000223517475
+                                    }
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "dc03b9dnyu80",
+                            "created": 1754965396983,
+                            "text": "ExecutionComponent",
+                            "layout_right_offset": {
+                                "x": 377.00000029802345,
+                                "y": 50.499999813735485
+                            }
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "dc03dnq5jt40",
+                                    "created": 1754965584941,
+                                    "text": "ExecutionDict<int,ExecutionCofnigObject>",
+                                    "layout_right_offset": {
+                                        "x": 105.75000821426511,
+                                        "y": -4.250000204890966
+                                    }
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "dc03ay0plkw0",
+                            "created": 1754965372255,
+                            "text": "SkillComponent",
+                            "layout_right_offset": {
+                                "x": 454.99999321997177,
+                                "y": 52.499999217689094
+                            }
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "dc03d3htae00",
+                                    "created": 1754965540901,
+                                    "text": "SkillDict<int,SkillAbility>",
+                                    "layout_right_offset": {
+                                        "x": 222.49999668449198,
+                                        "y": -9.999999850988388
+                                    }
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "dc03au7o4g00",
+                            "created": 1754965363968,
+                            "text": "StatusComponent",
+                            "layout_right_offset": {
+                                "x": 376.249994393438,
+                                "y": 52.499999217688924
+                            }
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "dc03f1mpa2g0",
+                                    "created": 1754965693571,
+                                    "text": "MultiMap<int,StatusAbility>",
+                                    "layout_right_offset": {
+                                        "x": 194.99999709427334,
+                                        "y": -1.2499999813736622
+                                    }
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "dbzlx57guqo0",
+                            "created": 1754916331934,
+                            "text": "ConditionComponent",
+                            "layout_right_offset": {
+                                "x": 461.2499931268394,
+                                "y": 51.249999236315716
+                            }
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "dbzlxb9p61s0",
+                                    "created": 1754916345130,
+                                    "text": "ConditiconTypeDict<ConditionType,Action>"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "dbzlvt38dcg0",
+                            "created": 1754916227192,
+                            "text": "ActionPointComponent",
+                            "layout_right_offset": {
+                                "x": 376.2499943934379,
+                                "y": 47.49999929219484
+                            }
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "dbzlw1wg7aw0",
+                                    "created": 1754916246373,
+                                    "text": "ActionPointTypeActionDict<ActionPointType,Action>"
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "dbzlv930jj40",
+                            "created": 1754916183644,
+                            "text": "AttributeComponent",
+                            "layout_right_offset": {
+                                "x": 474.99999292194775,
+                                "y": 43.7499993480742
+                            }
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "dbzlvnhmn7s0",
+                                    "created": 1754916215002,
+                                    "text": "AttributeDict<AttributeType,FloatNumeric>"
+                                },
+                                "children": []
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "data": {
+                    "id": "dc03m72b5s80",
+                    "created": 1754966253948,
+                    "text": "ActionAbility",
+                    "layout_mind_offset": {
+                        "x": 951.9999932944779,
+                        "y": -187.49999899417196
+                    }
+                },
+                "children": [
+                    {
+                        "data": {
+                            "id": "dc03mvq6ho80",
+                            "created": 1754966307634,
+                            "text": "EffectActionAbility",
+                            "layout_right_offset": {
+                                "x": 569.9999915063381,
+                                "y": -38.749999422580004
+                            }
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "dc03sekrmiw0",
+                                    "created": 1754966740487,
+                                    "text": "Make  EffectAssignAction",
+                                    "layout_right_offset": {
+                                        "x": 132.49999802559614,
+                                        "y": -11.24999983236205
+                                    }
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "dc03sriyqa00",
+                            "created": 1754966768676,
+                            "text": "AddStatusActionAbility",
+                            "layout_right_offset": {
+                                "x": 558.749991673976,
+                                "y": -37.49999944120657
+                            }
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "dc03t3cpuu80",
+                                    "created": 1754966794420,
+                                    "text": "Make AddStatusAction",
+                                    "layout_right_offset": {
+                                        "x": 71.24999893829192,
+                                        "y": -7.499999888241405
+                                    }
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "dc03tcm5so00",
+                            "created": 1754966814582,
+                            "text": "SpellSkillActionAbility",
+                            "layout_right_offset": {
+                                "x": 569.999991506338,
+                                "y": -34.99999947845936
+                            }
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "dc03tmeze8w0",
+                                    "created": 1754966835915,
+                                    "text": "Make SpellSkillAction",
+                                    "layout_right_offset": {
+                                        "x": 79.99999880790688,
+                                        "y": -4.999999925494251
+                                    }
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "dc03up1xm4o0",
+                            "created": 1754966920021,
+                            "text": "SpellItemActionAbility",
+                            "layout_right_offset": {
+                                "x": 561.2499916367237,
+                                "y": -31.249999534338713
+                            }
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "dc03ut9id400",
+                                    "created": 1754966929186,
+                                    "text": "Make SpellItemAction",
+                                    "layout_right_offset": {
+                                        "x": 108.74999837949883,
+                                        "y": -2.499999962747097
+                                    }
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "dc03vempwjs0",
+                            "created": 1754966975697,
+                            "text": "DamgeActionAbility",
+                            "layout_right_offset": {
+                                "x": 576.2499914132057,
+                                "y": -23.74999964609742
+                            }
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "dc03vq2e7dk0",
+                                    "created": 1754967000590,
+                                    "text": "Make DamageAction",
+                                    "layout_right_offset": {
+                                        "x": 78.74999882653333,
+                                        "y": 2.499999962747097
+                                    }
+                                },
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "data": {
+                            "id": "dc03vzp77gw0",
+                            "created": 1754967021560,
+                            "text": "CureActionAbility",
+                            "layout_right_offset": {
+                                "x": 583.749991301447,
+                                "y": -3.749999944120532
+                            }
+                        },
+                        "children": [
+                            {
+                                "data": {
+                                    "id": "dc03w3yivx40",
+                                    "created": 1754967030831,
+                                    "text": "Make CureAction",
+                                    "layout_right_offset": {
+                                        "x": 118.74999823048688,
+                                        "y": 2.499999962747495
+                                    }
+                                },
+                                "children": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "template": "default",
+    "theme": "fresh-blue",
+    "version": "1.4.43"
+}

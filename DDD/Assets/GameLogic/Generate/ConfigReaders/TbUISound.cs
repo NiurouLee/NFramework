@@ -11,22 +11,22 @@ using Luban;
 using  NFramework.ModuleSystem;
 
 
-namespace XHFramework.Game.ConfigReader
+namespace NFramework.Game.ConfigReader
 {
-public partial class TbUISound : IConfig<global::XHFramework.Game.TableUISound>
+public partial class TbUISound : IConfig<global::NFramework.Game.TableUISound>
 {
-    private System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableUISound> _dataMap;
-    private System.Collections.Generic.List<global::XHFramework.Game.TableUISound> _dataList;
+    private System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableUISound> _dataMap;
+    private System.Collections.Generic.List<global::NFramework.Game.TableUISound> _dataList;
 
     public void LoadData(ByteBuf _buf)
     {
         int n = _buf.ReadSize();
-        _dataMap = new System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableUISound>(n);
-        _dataList = new System.Collections.Generic.List<global::XHFramework.Game.TableUISound>(n);
+        _dataMap = new System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableUISound>(n);
+        _dataList = new System.Collections.Generic.List<global::NFramework.Game.TableUISound>(n);
         for (int i = n; i > 0; --i)
         {
-            global::XHFramework.Game.TableUISound _v;
-            _v = global::XHFramework.Game.TableUISound.DeserializeTableUISound(_buf);
+            global::NFramework.Game.TableUISound _v;
+            _v = global::NFramework.Game.TableUISound.DeserializeTableUISound(_buf);
             _dataList.Add(_v);
             _dataMap.Add(_v.Id, _v);
         }
@@ -35,17 +35,17 @@ public partial class TbUISound : IConfig<global::XHFramework.Game.TableUISound>
     public static TbUISound Create() => new TbUISound();
 
     // IConfig<T>
-    public global::XHFramework.Game.TableUISound Get(int id) => _dataMap[id];
-    public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableUISound> GetAll() => _dataMap;
+    public global::NFramework.Game.TableUISound Get(int id) => _dataMap[id];
+    public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableUISound> GetAll() => _dataMap;
     public System.Collections.IDictionary GetDic() => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableUISound> GetList() => _dataList;
-    public global::XHFramework.Game.TableUISound GetBean() => throw new System.NotSupportedException("TbUISound is a map table, use Get(id).");
+    public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableUISound> GetList() => _dataList;
+    public global::NFramework.Game.TableUISound GetBean() => throw new System.NotSupportedException("TbUISound is a map table, use Get(id).");
 
     // Convenience helpers
-    public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableUISound> DataMap => _dataMap;
-    public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableUISound> DataList => _dataList;
-    public global::XHFramework.Game.TableUISound GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
-    public global::XHFramework.Game.TableUISound this[int key] => _dataMap[key];
+    public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableUISound> DataMap => _dataMap;
+    public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableUISound> DataList => _dataList;
+    public global::NFramework.Game.TableUISound GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : default;
+    public global::NFramework.Game.TableUISound this[int key] => _dataMap[key];
 
     public void ResolveRef(TablesReader tables) { }
 

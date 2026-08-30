@@ -1,6 +1,6 @@
 using System;
 
-namespace XHFramework.Core {
+namespace NFramework.Core {
 
 /// <summary>
 /// 日志处理器接口

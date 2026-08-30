@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace XHFramework.Core {
+namespace NFramework.Core {
 
 /// <summary>
 /// 指针事件扩展方法

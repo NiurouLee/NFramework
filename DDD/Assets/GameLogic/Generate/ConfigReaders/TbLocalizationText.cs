@@ -10,23 +10,23 @@ using Luban;
 using NFramework.ModuleSystem;
 
 
-namespace XHFramework.Game.ConfigReader
+namespace NFramework.Game.ConfigReader
 {
-    public partial class TbLocalizationText : IConfig<global::XHFramework.Game.TableLocalizationText>
+    public partial class TbLocalizationText : IConfig<global::NFramework.Game.TableLocalizationText>
     {
-        private System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableLocalizationText> _dataMap;
-        private System.Collections.Generic.List<global::XHFramework.Game.TableLocalizationText> _dataList;
+        private System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableLocalizationText> _dataMap;
+        private System.Collections.Generic.List<global::NFramework.Game.TableLocalizationText> _dataList;
 
         public void LoadData(ByteBuf _buf)
         {
             int n = _buf.ReadSize();
             _dataMap =
-                new System.Collections.Generic.Dictionary<int, global::XHFramework.Game.TableLocalizationText>(n);
-            _dataList = new System.Collections.Generic.List<global::XHFramework.Game.TableLocalizationText>(n);
+                new System.Collections.Generic.Dictionary<int, global::NFramework.Game.TableLocalizationText>(n);
+            _dataList = new System.Collections.Generic.List<global::NFramework.Game.TableLocalizationText>(n);
             for (int i = n; i > 0; --i)
             {
-                global::XHFramework.Game.TableLocalizationText _v;
-                _v = global::XHFramework.Game.TableLocalizationText.DeserializeTableLocalizationText(_buf);
+                global::NFramework.Game.TableLocalizationText _v;
+                _v = global::NFramework.Game.TableLocalizationText.DeserializeTableLocalizationText(_buf);
                 _dataList.Add(_v);
                 _dataMap.Add(_v.Id, _v);
             }
@@ -35,30 +35,30 @@ namespace XHFramework.Game.ConfigReader
         public static TbLocalizationText Create() => new TbLocalizationText();
 
         // IConfig<T>
-        public global::XHFramework.Game.TableLocalizationText Get(int id) => _dataMap[id];
+        public global::NFramework.Game.TableLocalizationText Get(int id) => _dataMap[id];
 
-        public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableLocalizationText>
+        public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableLocalizationText>
             GetAll() => _dataMap;
 
         public System.Collections.IDictionary GetDic() => _dataMap;
 
-        public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableLocalizationText> GetList() =>
+        public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableLocalizationText> GetList() =>
             _dataList;
 
-        public global::XHFramework.Game.TableLocalizationText GetBean() =>
+        public global::NFramework.Game.TableLocalizationText GetBean() =>
             throw new System.NotSupportedException("TbLocalizationText is a map table, use Get(id).");
 
         // Convenience helpers
-        public System.Collections.Generic.IReadOnlyDictionary<int, global::XHFramework.Game.TableLocalizationText>
+        public System.Collections.Generic.IReadOnlyDictionary<int, global::NFramework.Game.TableLocalizationText>
             DataMap => _dataMap;
 
-        public System.Collections.Generic.IReadOnlyList<global::XHFramework.Game.TableLocalizationText> DataList =>
+        public System.Collections.Generic.IReadOnlyList<global::NFramework.Game.TableLocalizationText> DataList =>
             _dataList;
 
-        public global::XHFramework.Game.TableLocalizationText GetOrDefault(int key) =>
+        public global::NFramework.Game.TableLocalizationText GetOrDefault(int key) =>
             _dataMap.TryGetValue(key, out var v) ? v : default;
 
-        public global::XHFramework.Game.TableLocalizationText this[int key] => _dataMap[key];
+        public global::NFramework.Game.TableLocalizationText this[int key] => _dataMap[key];
 
         public void ResolveRef(TablesReader tables)
         {

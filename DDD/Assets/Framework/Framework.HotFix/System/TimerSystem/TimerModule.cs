@@ -7,7 +7,7 @@ namespace NFramework.ModuleSystem
     /// <summary>
     /// https://www.zhihu.com/question/52968810/answer/1929456142423163724
     /// </summary>
-    public class TimerM : FrameworkSystemModuleBase, IRendererUpdateSystem
+    public class TimerSystem : FrameworkSystemModuleBase, IRendererUpdateSystem
     {
         private HireachicalTimerWheel hireachicalTimerWheel;
 

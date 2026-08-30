@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace XHFramework.Core {
+namespace NFramework.Core {
 
     /// <summary>
     /// 状态机

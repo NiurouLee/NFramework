@@ -10,7 +10,7 @@
 using Luban;
 
 
-namespace XHFramework.Game
+namespace NFramework.Game
 {
 public sealed partial class TableMusic : Luban.BeanBase
 {

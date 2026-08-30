@@ -1,13 +1,11 @@
 using System;
-using   NFramework.ModuleSystem;
+using NFramework.ModuleSystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using  NFramework.ModuleSystem;
+using EventSystem = UnityEngine.EventSystems.EventSystem;
 
-
-namespace XHFramework.Core
+namespace NFramework.Core
 {
-
     /// <summary>
     /// 指针事件监听器
     /// 支持UI元素和3D物体的事件监听
@@ -49,50 +47,45 @@ namespace XHFramework.Core
         #endregion
 
         #region 配置参数
+
         /// <summary>
         /// 穿透的事件类型
         /// </summary>
-        [Header("应用事件类型")]
-        public PointerEventType useEvents = PointerEventType.None;
+        [Header("应用事件类型")] public PointerEventType useEvents = PointerEventType.None;
+
         /// <summary>
         /// 双击间隔时间（秒）
         /// </summary>
-        [Header("双击设置")]
-        [Tooltip("双击的最大间隔时间")]
+        [Header("双击设置")] [Tooltip("双击的最大间隔时间")]
         public float doubleClickInterval = 0.3f;
 
         /// <summary>
         /// 长按触发时间（秒）
         /// </summary>
-        [Header("长按设置")]
-        [Tooltip("触发长按的最小按住时间")]
+        [Header("长按设置")] [Tooltip("触发长按的最小按住时间")]
         public float longPressTime = 0.5f;
 
         /// <summary>
         /// 长按持续回调间隔（秒）
         /// </summary>
-        [Tooltip("长按持续中的回调间隔")]
-        public float longPressInterval = 0.1f;
+        [Tooltip("长按持续中的回调间隔")] public float longPressInterval = 0.1f;
 
         /// <summary>
         /// 拖拽阈值（像素）
         /// </summary>
-        [Header("拖拽设置")]
-        [Tooltip("开始拖拽的最小移动距离")]
+        [Header("拖拽设置")] [Tooltip("开始拖拽的最小移动距离")]
         public float dragThreshold = 10f;
 
         /// <summary>
         /// 是否允许事件穿透
         /// </summary>
-        [Header("事件穿透")]
-        [Tooltip("是否允许事件穿透到下层UI或3D物体")]
+        [Header("事件穿透")] [Tooltip("是否允许事件穿透到下层UI或3D物体")]
         public bool passThrough = false;
 
         /// <summary>
         /// 穿透的事件类型
         /// </summary>
-        [Tooltip("允许穿透的事件类型")]
-        public PointerEventType passThroughEvents = PointerEventType.None;
+        [Tooltip("允许穿透的事件类型")] public PointerEventType passThroughEvents = PointerEventType.None;
 
         /// <summary>
         /// 是否穿透到3D物体
@@ -103,15 +96,12 @@ namespace XHFramework.Core
         /// <summary>
         /// 是否忽略所有事件
         /// </summary>
-        [Header("事件控制")]
-        [Tooltip("是否忽略所有事件")]
-        public bool ignoreAllEvents = false;
+        [Header("事件控制")] [Tooltip("是否忽略所有事件")] public bool ignoreAllEvents = false;
 
         /// <summary>
         /// 忽略的事件类型
         /// </summary>
-        [Tooltip("忽略的事件类型")]
-        public PointerEventType ignoredEvents = PointerEventType.None;
+        [Tooltip("忽略的事件类型")] public PointerEventType ignoredEvents = PointerEventType.None;
 
         #endregion
 
@@ -147,6 +137,7 @@ namespace XHFramework.Core
             {
                 listener = go.AddComponent<PointerEventListener>();
             }
+
             return listener;
         }
 
@@ -154,7 +145,6 @@ namespace XHFramework.Core
         {
             return go.GetComponent<PointerEventListener>() != null;
         }
-
 
         #endregion
 
@@ -276,6 +266,7 @@ namespace XHFramework.Core
             {
                 _clickCount = 1;
             }
+
             _lastClickTime = currentTime;
 
             FillEventData(eventData, PointerEventType.Click);
@@ -490,7 +481,8 @@ namespace XHFramework.Core
             }
         }
 
-        private void ExecuteEventOnTarget(PointerEventListener listener, PointerEventData eventData, PointerEventType eventType)
+        private void ExecuteEventOnTarget(PointerEventListener listener, PointerEventData eventData,
+            PointerEventType eventType)
         {
             switch (eventType)
             {
@@ -608,7 +600,8 @@ namespace XHFramework.Core
         /// <param name="enabled">是否启用穿透</param>
         /// <param name="events">穿透的事件类型</param>
         /// <param name="includeTo3D">是否穿透到3D物体</param>
-        public void SetPassThrough(bool enabled, PointerEventType events = PointerEventType.All, bool includeTo3D = false)
+        public void SetPassThrough(bool enabled, PointerEventType events = PointerEventType.All,
+            bool includeTo3D = false)
         {
             passThrough = enabled;
             passThroughEvents = events;
@@ -617,5 +610,4 @@ namespace XHFramework.Core
 
         #endregion
     }
-
 }

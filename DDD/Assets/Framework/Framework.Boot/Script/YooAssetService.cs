@@ -12,6 +12,9 @@ namespace NFramework.Boot
 {
     public class YooAssetService
     {
+        /// <summary>编辑器播放模式存储键（HybridCLRTool 菜单可切换）</summary>
+        private const string EditorPlayModePrefKey = "YooAsset.EditorPlayMode";
+
         private readonly string _packageName;
         private readonly string _packageURL;
         // 事件
@@ -36,7 +39,11 @@ namespace NFramework.Boot
         private EPlayMode GetPlayMode()
         {
 #if UNITY_EDITOR
-            return EPlayMode.EditorSimulateMode; // 编辑器下使用配置的模式
+            // 编辑器下通过 HybridCLRTool 菜单切换播放模式（默认模拟模式）：
+            // 0 = EditorSimulateMode 模拟（直接读 Assets，不走 bundle）
+            // 1 = OfflinePlayMode   离线（读 StreamingAssets 里的真 bundle）
+            // 2 = HostPlayMode     联机（从更新服务器下载真 bundle）
+            return (EPlayMode)UnityEditor.EditorPrefs.GetInt(EditorPlayModePrefKey, (int)EPlayMode.EditorSimulateMode);
 #else
 #if RESOURCE_OFFLINE
             return EPlayMode.OfflinePlayMode;
@@ -63,24 +70,20 @@ namespace NFramework.Boot
 
                 var playMode = GetPlayMode();
 
-                // 离线模式和编辑器模拟模式不需要网络更新，直接完成
-                if (playMode == EPlayMode.OfflinePlayMode)
-                {
-                    Debug.Log($"{playMode} 模式，跳过网络更新流程");
-                    OnStepChange?.Invoke("YooAsset更新完成");
-                    FinishUpdate();
-                    Debug.Log("YooAsset初始化和更新流程全部完成");
-                    return true;
-                }
-
-                // 联机模式：请求版本、更新清单、下载资源
+                // 注意：YooAsset 2.x 的 ActiveManifest 只有调用 UpdatePackageManifestAsync 后才会被激活，
+                // InitializeAsync 只初始化文件系统。所以离线/模拟/联机都必须先“请求版本 + 更新清单”。
                 if (!await RequestPackageVersion())
                     return false;
                 if (!await UpdatePackageManifest())
                     return false;
-                if (!await CheckAndDownloadFiles())
-                    return false;
-                await ClearCacheFiles();
+
+                // 只有联机模式需要下载更新资源；离线/模拟模式没有待下载内容
+                if (playMode == EPlayMode.HostPlayMode)
+                {
+                    if (!await CheckAndDownloadFiles())
+                        return false;
+                    await ClearCacheFiles();
+                }
 
                 OnStepChange?.Invoke("YooAsset更新完成");
                 FinishUpdate();

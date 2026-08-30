@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using   NFramework.ModuleSystem;
+using System;
+using Cysharp.Threading.Tasks;
+using UnityEngine.SceneManagement;
 
 namespace NFramework.ModuleSystem
 {
     /// <summary>
-    /// World作为Entity的ROOT ,所有的Entity最终都会挂在一个world下
+    /// World 作为 Entity 的 ROOT，所有 Entity 最终都会挂在一个 World 下。
     /// </summary>
     public class World : Entity
     {
-        
-        
     }
 }

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace XHFramework.Core {
+namespace NFramework.Core {
 
 /// <summary>
 /// 资源管理配置

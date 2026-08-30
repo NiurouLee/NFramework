@@ -1,4 +1,4 @@
-using  NFramework.Core;
+using NFramework.Core;
 
 namespace NFramework.ModuleSystem
 {
@@ -8,6 +8,7 @@ namespace NFramework.ModuleSystem
     public class SubViewRecords : BaseRecordSet<View>, IFreeToPool
     {
         private View m_orderView;
+
         public void FreeToPool()
         {
         }
@@ -16,6 +17,7 @@ namespace NFramework.ModuleSystem
         {
             m_orderView = inOrder;
         }
+
         protected override void OnDestroy()
         {
             foreach (var view in this.Records)
@@ -23,7 +25,9 @@ namespace NFramework.ModuleSystem
                 view.Destroy();
             }
         }
-        public T AddSubViewByFacade<T>(T inView, UIFacade inFacade, IUIFacadeProvider inProvider) where T : View
+
+        public T AddSubViewByFacadeAndSetParent<T>(T inView, UIFacade inFacade, IUIFacadeProvider inProvider)
+            where T : View
         {
             inView.SetParent(this.m_orderView);
             this._AddChild(inView);
@@ -32,7 +36,17 @@ namespace NFramework.ModuleSystem
             return inView;
         }
 
-        public T AddSubViewByFacade<T, D>(T inView, UIFacade inFacade, IUIFacadeProvider inProvider, D inData) where T : View, IViewSetData<D>
+        public T AddSubViewByFacade<T>(T inView, UIFacade inFacade, IUIFacadeProvider inProvider) where T : View
+        {
+            // inView.SetParent(this.m_orderView);
+            this._AddChild(inView);
+            inView.SetUIFacade(inFacade, inProvider);
+            inView.Awake();
+            return inView;
+        }
+
+        public T AddSubViewByFacade<T, D>(T inView, UIFacade inFacade, IUIFacadeProvider inProvider, D inData)
+            where T : View, IViewSetData<D>
         {
             inView.SetParent(this.m_orderView);
             this._AddChild(inView);
@@ -41,6 +55,7 @@ namespace NFramework.ModuleSystem
             {
                 viewSetData.SetData(inData);
             }
+
             inView.Awake();
             return inView;
         }
@@ -51,6 +66,7 @@ namespace NFramework.ModuleSystem
             {
                 return false;
             }
+
             return this.TryAdd(inView);
         }
 
@@ -60,8 +76,8 @@ namespace NFramework.ModuleSystem
             {
                 inView.Destroy();
             }
+
             return inView;
         }
-
     }
 }

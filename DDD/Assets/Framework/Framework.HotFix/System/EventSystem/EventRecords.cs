@@ -1,12 +1,13 @@
-using  NFramework.Core;
-using    NFramework.ModuleSystem;
-using   NFramework.ModuleSystem;
+using NFramework.Core;
+using NFramework.ModuleSystem;
+using NFramework.ModuleSystem;
 
-namespace NFramework.ModuleSystem.Module.EventModule
+namespace NFramework.ModuleSystem
 {
     public class EventRecords : BaseRecordSet<BaseRegister>, IEventScheduler, IFreeToPool
     {
         private IEventScheduler EventSchedule { get; set; }
+
         public void SetSchedule(IEventScheduler inEventSchedule)
         {
             EventSchedule = inEventSchedule;
@@ -86,12 +87,18 @@ namespace NFramework.ModuleSystem.Module.EventModule
             return this.EventSchedule.Check<T>(callback, channel);
         }
 
+        public void Fire<T>(ref T @event) where T : IEvent
+        {
+            this.EventSchedule.Fire(ref @event);
+        }
+
         protected override void OnDestroy()
         {
             foreach (var register in this.Records)
             {
                 this.EventSchedule.UnSubscribe(register);
             }
+
             this.EventSchedule = null;
         }
 

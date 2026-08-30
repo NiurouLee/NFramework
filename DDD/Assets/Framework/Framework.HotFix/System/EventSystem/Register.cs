@@ -2,7 +2,7 @@ using System;
 using   NFramework.ModuleSystem;
 using    NFramework.ModuleSystem;
 
-namespace NFramework.ModuleSystem.Module.EventModule
+namespace NFramework.ModuleSystem
 {
     public abstract class BaseRegister : NObject, IFreeToPool, IEquatable<BaseRegister>
     {

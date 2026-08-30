@@ -335,7 +335,7 @@ namespace NFramework.ModuleSystem
                     int currentIndex = 0;
                     for (int i = 0; i < itemList.Count; i++)
                     {
-                        displayNames.Add($"{itemList[i].gameObject.name} ({itemList[i].GetType().Name})");
+                        displayNames.Add(itemList[i].GetType().Name);
                         if (ReferenceEquals(itemList[i], element.Component))
                         {
                             currentIndex = i + 1;
@@ -346,7 +346,7 @@ namespace NFramework.ModuleSystem
                     if (currentIndex == 0 && element.Component != null)
                     {
                         itemList.Insert(0, element.Component as Component);
-                        displayNames.Insert(1, $"⚠ {element.Component.name} ({element.Component.GetType().Name})");
+                        displayNames.Insert(1, $"⚠ {element.Component.GetType().Name}");
                         currentIndex = 1;
                     }
 
@@ -418,6 +418,26 @@ namespace NFramework.ModuleSystem
                 }
             }
             EditorGUILayout.EndHorizontal();
+
+            // 可交互组件：点击事件生成开关
+            if (element.Component != null &&
+                UIFacadeCodeTemplateLoader.InteractTemplateIdByComponentTypeName.ContainsKey(element.Component.GetType().Name))
+            {
+                EditorGUILayout.BeginHorizontal();
+                {
+                    GUILayout.Space(15);
+                    bool newGenerateClick = EditorGUILayout.ToggleLeft(
+                        new GUIContent("生成点击事件", "生成脚本时是否生成点击绑定与事件桩"),
+                        element.GenerateClickEvent);
+                    if (newGenerateClick != element.GenerateClickEvent)
+                    {
+                        element.GenerateClickEvent = newGenerateClick;
+                        EditorUtility.SetDirty(facade);
+                        onDataChanged?.Invoke();
+                    }
+                }
+                EditorGUILayout.EndHorizontal();
+            }
         }
     }
 }

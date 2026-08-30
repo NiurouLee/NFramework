@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using NFramework.ModuleSystem;
 
-namespace XHFramework.Core
+namespace NFramework.Core
 {
     /// <summary>
     /// 状态机管理器

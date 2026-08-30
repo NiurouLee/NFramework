@@ -6,7 +6,7 @@ using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using System.IO;
 
-using XHFramework;
+using NFramework;
 namespace NFramework.ModuleSystem
 {
     /// <summary>
@@ -26,16 +26,14 @@ namespace NFramework.ModuleSystem
 
             if (foldout)
             {
-                SirenixEditorGUI.InfoMessageBox("使用以下工具来管理UI元素和配置");
+                EditorGUILayout.Space(2);
 
-                EditorGUILayout.Space(3);
-
-                // 第一行工具按钮
+                // 第一行：元素管理
                 EditorGUILayout.BeginHorizontal();
                 {
                     // 自动收集按钮
                     GUI.backgroundColor = new Color(0.7f, 1f, 0.7f);
-                    if (GUILayout.Button(new GUIContent("自动收集子对象", "自动收集GameObject下所有满足准入规则的组件"),
+                    if (GUILayout.Button(new GUIContent("自动收集", "自动收集GameObject下所有满足准入规则的组件"),
                             GUILayout.Height(22)))
                     {
                         UIFacadeInspectorUIElementBehavior.AutoCollectChildComponents(facade);
@@ -50,15 +48,6 @@ namespace NFramework.ModuleSystem
                         onDataChanged?.Invoke();
                     }
 
-                    GUI.backgroundColor = Color.white;
-                }
-                EditorGUILayout.EndHorizontal();
-
-                EditorGUILayout.Space(3);
-
-                // 第二行工具按钮
-                EditorGUILayout.BeginHorizontal();
-                {
                     // 验证配置按钮
                     GUI.backgroundColor = new Color(0.9f, 0.9f, 0.7f);
                     if (GUILayout.Button(new GUIContent("验证配置", "验证当前配置是否正确"), GUILayout.Height(22)))
@@ -66,6 +55,15 @@ namespace NFramework.ModuleSystem
                         UIFacadeInspectorUIElementBehavior.ValidateConfiguration(facade);
                     }
 
+                    GUI.backgroundColor = Color.white;
+                }
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.Space(2);
+
+                // 第二行：生成与保存
+                EditorGUILayout.BeginHorizontal();
+                {
                     // 生成脚本按钮
                     GUI.backgroundColor = new Color(0.7f, 0.9f, 1f);
                     if (GUILayout.Button(new GUIContent("生成脚本", "根据配置生成UI脚本"), GUILayout.Height(22)))
@@ -73,15 +71,6 @@ namespace NFramework.ModuleSystem
                         UIFacadeScriptGenerator.GenerateScript(facade);
                     }
 
-                    GUI.backgroundColor = Color.white;
-                }
-                EditorGUILayout.EndHorizontal();
-
-                EditorGUILayout.Space(3);
-
-                // 第三行工具按钮
-                EditorGUILayout.BeginHorizontal();
-                {
                     // 保存配置按钮
                     GUI.backgroundColor = new Color(0.8f, 0.8f, 1f);
                     if (GUILayout.Button(new GUIContent("保存配置", "保存当前配置到Prefab"), GUILayout.Height(22)))
@@ -90,14 +79,7 @@ namespace NFramework.ModuleSystem
                     }
 
                     GUI.backgroundColor = Color.white;
-                }
-                EditorGUILayout.EndHorizontal();
 
-                EditorGUILayout.Space(3);
-
-                // 第四行工具按钮
-                EditorGUILayout.BeginHorizontal();
-                {
                     // 打开脚本按钮
                     if (!string.IsNullOrEmpty(facade.m_ScriptName))
                     {
@@ -141,7 +123,7 @@ namespace NFramework.ModuleSystem
             EditorUtility.SetDirty(facade);
             AssetDatabase.SaveAssets();
 
-            EditorUtility.DisplayDialog("成功", "配置已保存！", "确定");
+            Debug.Log($"[UIFacade] 配置已保存: {facade.name}");
         }
     }
 }
