@@ -6,7 +6,8 @@ namespace Game.Logic
     {
         public static void StartGameLogic()
         {
-            GetSystem<ContextSystem>().CreateContext<ExContext>();
+            var excontent = GetSystem<ContextSystem>().CreateContext<ExContext>();
+            excontent.Enter();
         }
     }
 }

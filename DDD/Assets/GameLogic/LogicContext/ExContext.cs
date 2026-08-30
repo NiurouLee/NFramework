@@ -8,10 +8,10 @@ namespace Game.Logic
         public World ExWorld { get; private set; }
 
 
-        public IEnumerator Enter()
+        public void Enter()
         {
+            GetSystem<UISystem>().OpenAsync<ExampleExwindow>();
             this.ExWorld = this.GetSystem<WorldSystem>().CreateWorld<ExWorld>();
-            yield return null;
         }
     }
 }
