@@ -33,6 +33,9 @@ namespace Game.Logic
         public NFramework.ModuleSystem.NSimpleButton Button_close =>
             Facade.Components[9] as NFramework.ModuleSystem.NSimpleButton;
 
+        public NFramework.ModuleSystem.NSimpleButton Button_openEventCenter =>
+            Facade.Components[10] as NFramework.ModuleSystem.NSimpleButton;
+
         private LoopListViewComponent m_LoopScrollViewList;
 
         // private SimpleListViewComponent m_SimpleScrollViewList;
@@ -40,26 +43,7 @@ namespace Game.Logic
         {
             this.BindClick(Button, OnButtonClick);
             this.BindClick(Button_close, OnButton_closeClick);
-        }
-
-        private void OnButtonClick(NSimpleButton obj)
-        {
-            if (m_DataList.Count == 0)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    m_DataList.Add(new FunctionItemData { Name = i.ToString() });
-                }
-            }
-
-            m_LoopScrollViewList.SetList(m_DataList);
-            m_LoopScrollViewList.Refill(0);
-        }
-
-        void OnButton_closeClick(NSimpleButton obj)
-        {
-            m_DataList.Clear();
-            m_LoopScrollViewList.Refill();
+            this.BindClick(Button_openEventCenter, OnButton_openEventCenterClick);
         }
 
         #endregion
@@ -70,6 +54,29 @@ namespace Game.Logic
 
 
         private List<FunctionItemData> m_DataList = new List<FunctionItemData>();
+
+
+        private void OnButtonClick(NSimpleButton obj)
+        {
+            this.m_LoopScrollViewList.SetList(this.m_DataList);
+            for (int i = 0; i < 10; i++)
+            {
+                m_DataList.Add(new FunctionItemData() { Name = i.ToString() });
+            }
+
+            this.m_LoopScrollViewList.Refill();
+        }
+
+        private void OnButton_openEventCenterClick(NSimpleButton obj)
+        {
+            GetSystem<UISystem>().OpenAsync<EventcenterWindow>();
+        }
+
+        private void OnButton_closeClick(NSimpleButton obj)
+        {
+            this.m_DataList.Clear();
+            this.m_LoopScrollViewList.Refill();
+        }
 
         #region Live
 

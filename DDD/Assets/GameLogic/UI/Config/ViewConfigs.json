@@ -15,6 +15,14 @@
             "Layer": 0,
             "IsWindow": true,
             "IsFixedLayer": false
+        },
+        {
+            "ID": "EventcenterWindow",
+            "Namespace": "",
+            "AssetID": "EentCenterWindow",
+            "Layer": 0,
+            "IsWindow": true,
+            "IsFixedLayer": false
         }
     ]
 }

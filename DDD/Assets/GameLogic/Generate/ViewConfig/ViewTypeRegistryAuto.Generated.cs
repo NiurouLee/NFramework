@@ -17,6 +17,7 @@ namespace Game.Logic
         {
             { typeof(ExampleExwindow), "ExampleExwindow" },
             { typeof(MainWindow), "MainWindow" },
+            { typeof(EventcenterWindow), "EventcenterWindow" },
         };
     }
 }
