@@ -1,8 +1,6 @@
-using NFramework.ModuleSystem;
 using GameObject = UnityEngine.GameObject;
 using Vector3 = UnityEngine.Vector3;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 
@@ -15,7 +13,7 @@ namespace NFramework.ModuleSystem
         public Camera UICamera { get; private set; }
         public Canvas UICanvas { get; private set; }
         public Transform UICanvasTrf { get; private set; }
-        public EventSystem EventSystem { get; private set; }
+        public UnityEngine.EventSystems.EventSystem EventSystem { get; private set; }
 
         private CanvasScaler scaler;
         private UIFixedLayerServices m_FixedLayer;
@@ -46,7 +44,7 @@ namespace NFramework.ModuleSystem
             mainCamera.GetComponent<UniversalAdditionalCameraData>().cameraStack.Add(UICamera);
             UICanvasTrf = uiRoot.transform.Find("Canvas");
             UICanvas = UICanvasTrf.GetComponent<Canvas>();
-            EventSystem = uiRoot.GetComponentInChildren<EventSystem>();
+            EventSystem = uiRoot.GetComponentInChildren<UnityEngine.EventSystems.EventSystem>();
             scaler = this.UICanvas.GetOrAddComponent<CanvasScaler>();
         }
 

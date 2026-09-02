@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using NFramework.ModuleSystem;
+using Unity.VisualScripting;
 
 
 namespace Game.Logic
@@ -28,27 +30,41 @@ namespace Game.Logic
         public NFramework.ModuleSystem.NSimpleButton Button =>
             Facade.Components[8] as NFramework.ModuleSystem.NSimpleButton;
 
+        public NFramework.ModuleSystem.NSimpleButton Button_close =>
+            Facade.Components[9] as NFramework.ModuleSystem.NSimpleButton;
+
         private LoopListViewComponent m_LoopScrollViewList;
 
         // private SimpleListViewComponent m_SimpleScrollViewList;
         protected override void OnBindFacade()
         {
-// this.BindClick(Button, OnButtonClick);
+            this.BindClick(Button, OnButtonClick);
+            this.BindClick(Button_close, OnButton_closeClick);
+        }
+
+        private void OnButtonClick(NSimpleButton obj)
+        {
+            if (m_DataList.Count == 0)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    m_DataList.Add(new FunctionItemData { Name = i.ToString() });
+                }
+            }
+
+            m_LoopScrollViewList.SetList(m_DataList);
+            m_LoopScrollViewList.Refill(0);
+        }
+
+        void OnButton_closeClick(NSimpleButton obj)
+        {
+            m_DataList.Clear();
+            m_LoopScrollViewList.Refill();
         }
 
         #endregion
 
         #region Event Handlers
-
-        private void OnButton1Click(NFramework.ModuleSystem.NSimpleButton inButton)
-        {
-            this.Close();
-        }
-
-        private void OnButton2Click(NFramework.ModuleSystem.NSimpleButton inButton)
-        {
-            Application.Quit();
-        }
 
         #endregion
 
@@ -65,16 +81,6 @@ namespace Game.Logic
 
         protected override void OnShow()
         {
-            if (m_DataList.Count == 0)
-            {
-                for (int i = 0; i < 1; i++)
-                {
-                    m_DataList.Add(new FunctionItemData { Name = i.ToString() });
-                }
-            }
-
-            m_LoopScrollViewList.SetList(m_DataList);
-            m_LoopScrollViewList.Refill(0);
         }
 
         protected override void OnHide()
@@ -84,7 +90,6 @@ namespace Game.Logic
 
         private void InitLoopListView()
         {
-
             m_LoopScrollViewList = new LoopListViewComponent();
             m_LoopScrollViewList
                 .BindScrollRect(LoopScrollView)
