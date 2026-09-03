@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 
@@ -9,95 +9,96 @@ namespace NFramework.ModuleSystem
         #region Cache
 
         /// <summary>
-        /// 缓存打开中、打开的windowReq
+        /// 打开中、打开的 WindowRequest。
+        /// key 为 RequestKey（窗口ID + Key），因此同一 ViewConfig 配不同 Key 可以并存多个实例。
         /// </summary>
-        public Dictionary<string, WindowRequest> WindowRequestDictionary = new Dictionary<string, WindowRequest>();
+        /// <summary>内部请求表，外部只应通过 Open/Close API 操作</summary>
+        internal Dictionary<string, WindowRequest> WindowRequestDictionary = new Dictionary<string, WindowRequest>();
 
-        private bool CheckWindowReq(ViewConfig inViewConfig, out WindowRequest outWindowRequest)
+        private bool TryGetWindowRequest(string inWindowRequestKey, out WindowRequest outWindowRequest)
         {
-            var windowID = inViewConfig.ID;
-            if (this.WindowRequestDictionary.TryGetValue(windowID, out var request))
-            {
-                outWindowRequest = request;
-                return true;
-            }
-            else
-            {
-                outWindowRequest = null;
-                return false;
-            }
+            return this.WindowRequestDictionary.TryGetValue(inWindowRequestKey, out outWindowRequest);
         }
 
-        private bool CheckWindowReq(string inWindowID, out WindowRequest outWindowRequest)
+        private bool CheckWindowReq(ViewConfig inViewConfig, string inKey, out WindowRequest outWindowRequest)
         {
-            if (this.WindowRequestDictionary.TryGetValue(inWindowID, out var request))
+            return TryGetWindowRequest(WindowRequest.MakeRequestKey(inViewConfig.ID, inKey), out outWindowRequest);
+        }
+
+        private bool TryGetWindowRequest(Window inWindow, out WindowRequest outWindowRequest)
+        {
+            foreach (var pair in WindowRequestDictionary)
             {
-                outWindowRequest = request;
-                return false;
+                if (ReferenceEquals(pair.Value.CacheWindowObj, inWindow))
+                {
+                    outWindowRequest = pair.Value;
+                    return true;
+                }
             }
-            else
-            {
-                outWindowRequest = null;
-                return true;
-            }
+
+            outWindowRequest = null;
+            return false;
         }
 
         #endregion
 
-        private void AddWindowRequest(string inWindowID, WindowRequest inWindowRequest)
+        private void AddWindowRequest(WindowRequest inWindowRequest)
         {
-            WindowRequestDictionary.Add(inWindowID, inWindowRequest);
+            WindowRequestDictionary.Add(inWindowRequest.RequestKey, inWindowRequest);
         }
 
-        private bool RemoveWindowRequest(string inWindowID)
+        private bool RemoveWindowRequest(string inWindowRequestKey)
         {
-            return WindowRequestDictionary.Remove(inWindowID);
+            return WindowRequestDictionary.Remove(inWindowRequestKey);
         }
-
 
         #region common
 
-        private WindowRequest CreateRequestAndWindow<TW>(ViewConfig inViewConfig) where TW : Window, new()
+        private WindowRequest CreateRequestAndWindow<TW>(ViewConfig inViewConfig, string inKey = null)
+            where TW : Window, new()
         {
-            var windowRequest = CreateRequest<TW>(inViewConfig);
+            var windowRequest = CreateRequest<TW>(inViewConfig, inKey);
             var window = this.CreateView<TW>();
             windowRequest.CacheWindow(window);
             windowRequest.SetStage(WindowRequestStage.Cache);
             return windowRequest;
         }
 
-        private WindowRequestByWindow<TW> CreateRequest<TW>(ViewConfig inViewConfig) where TW : Window
+        private WindowRequestByWindow<TW> CreateRequest<TW>(ViewConfig inViewConfig, string inKey = null)
+            where TW : Window
         {
             var windowRequest = new WindowRequestByWindow<TW>(inViewConfig);
-            AddWindowRequest(inViewConfig.ID, windowRequest);
+            windowRequest.CacheKey(inKey);
+            AddWindowRequest(windowRequest);
             windowRequest.SetStage(WindowRequestStage.Construct);
             return windowRequest;
         }
 
-        private WindowRequest CreateRequestAndWindow<TW, TD>(ViewConfig inViewConfig, TD inViewData)
+        private WindowRequest CreateRequestAndWindow<TW, TD>(ViewConfig inViewConfig, TD inViewData, string inKey = null)
             where TW : Window, IViewSetData<TD>, new() where TD : class
         {
-            var windowRequest = CreateRequest<TW, TD>(inViewConfig, inViewData);
+            var windowRequest = CreateRequest<TW, TD>(inViewConfig, inViewData, inKey);
             var window = this.CreateView<TW>();
             windowRequest.CacheWindowAndData(window, inViewData);
             windowRequest.SetStage(WindowRequestStage.Cache);
             return windowRequest;
         }
 
-        private WindowRequest<TW, TD> CreateRequest<TW, TD>(ViewConfig inViewConfig, TD inViewData)
+        private WindowRequest<TW, TD> CreateRequest<TW, TD>(ViewConfig inViewConfig, TD inViewData, string inKey = null)
             where TW : Window, IViewSetData<TD>, new() where TD : class
         {
             var windowRequest = new WindowRequest<TW, TD>(inViewConfig);
-            AddWindowRequest(inViewConfig.ID, windowRequest);
+            windowRequest.CacheKey(inKey);
+            AddWindowRequest(windowRequest);
             windowRequest.SetStage(WindowRequestStage.Construct);
             return windowRequest;
         }
 
-
-        private WindowRequestByWindow CreateRequest(ViewConfig inViewConfig)
+        private WindowRequestByWindow CreateRequest(ViewConfig inViewConfig, string inKey = null)
         {
             var windowRequest = new WindowRequestByWindow(inViewConfig);
-            AddWindowRequest(inViewConfig.ID, windowRequest);
+            windowRequest.CacheKey(inKey);
+            AddWindowRequest(windowRequest);
             windowRequest.SetStage(WindowRequestStage.Construct);
             var window = this.CreateView(inViewConfig) as Window;
             windowRequest.Setup(window);
@@ -105,238 +106,396 @@ namespace NFramework.ModuleSystem
             return windowRequest;
         }
 
-
-        private WindowRequestByData<TD> CreateRequestByData<TD>(ViewConfig inViewConfig, TD inViewData) where TD : class
+        /// <summary>仅创建 WindowRequestByData，窗口由调用方（例如复用池）再 Cache</summary>
+        private WindowRequestByData<TD> CreateDataRequest<TD>(ViewConfig inViewConfig, string inKey = null)
+            where TD : class
         {
             var windowRequest = new WindowRequestByData<TD>(inViewConfig);
-            AddWindowRequest(inViewConfig.ID, windowRequest);
+            windowRequest.CacheKey(inKey);
+            AddWindowRequest(windowRequest);
             windowRequest.SetStage(WindowRequestStage.Construct);
+            return windowRequest;
+        }
+
+        private WindowRequestByData<TD> CreateRequestByData<TD>(ViewConfig inViewConfig, TD inViewData,
+            string inKey = null) where TD : class
+        {
+            var windowRequest = CreateDataRequest<TD>(inViewConfig, inKey);
             var window = this.CreateView(inViewConfig) as Window;
             windowRequest.CacheWindowAndData(window, inViewData);
             windowRequest.SetStage(WindowRequestStage.Cache);
             return windowRequest;
         }
 
+        private void AllocOrder(ViewConfig inViewConfig, WindowRequest windowRequest)
+        {
+            if (this.TryGetLayerStack(inViewConfig.Layer, out var layerStack))
+            {
+                windowRequest.CacheOrder(layerStack.GetOrder());
+            }
+        }
+
+        private bool TryGetPooledWindow<T>(string inRequestKey, out T outWindow) where T : Window
+        {
+            outWindow = null;
+            return this.WindowPoolEnabled && this.m_Pool != null &&
+                   this.m_Pool.TryGetWindow(inRequestKey, out outWindow);
+        }
+
+        private bool TryGetPooledWindow(string inRequestKey, out Window outWindow)
+        {
+            outWindow = null;
+            return this.WindowPoolEnabled && this.m_Pool != null &&
+                   this.m_Pool.TryGetWindow(inRequestKey, out outWindow);
+        }
+
+        /// <summary>
+        /// 复用池窗口时把已有 Window/Facade/Provider 绑定到新请求上。
+        /// 窗口已经 Awake，因此之后不会再调 request.Awake()。
+        /// </summary>
+        private void CacheWindowFromPool(WindowRequest inWindowRequest, Window inWindow)
+        {
+            if (inWindow == null)
+            {
+                throw new Exception("CacheWindowFromPool window is null");
+            }
+
+            if (inWindow.Facade == null || inWindow.Provider == null)
+            {
+                throw new Exception($"CacheWindowFromPool window not complete, ID:{inWindowRequest.Name}");
+            }
+
+            inWindowRequest.CacheWindow(inWindow);
+            inWindowRequest.CacheFacade(inWindow.Facade);
+            inWindowRequest.CacheProvider(inWindow.Provider);
+            inWindowRequest.SetStage(WindowRequestStage.Cache);
+        }
+
+        /// <summary>从池复用：同步把窗口挂回层级并 Show（异步调用返回已完成 task）</summary>
+        private UniTask OpenFromPoolAsync(ViewConfig inViewConfig, WindowRequest inWindowRequest, Window inWindow)
+        {
+            var deferred = new UniTaskCompletionSource();
+            inWindowRequest.SetTaskCompletionSource(deferred);
+
+            try
+            {
+                this.CacheWindowFromPool(inWindowRequest, inWindow);
+                this.OpenPooledWindow(inViewConfig, inWindowRequest);
+                deferred.TrySetResult();
+            }
+            catch (Exception e)
+            {
+                this.GetSystem<LoggerSystem>()
+                    ?.ErrStack($"Open window from pool failed, WindowName:{inWindowRequest.Name}, Error:{e}");
+                this.CleanupFailedRequest(inWindowRequest, inWindowRequest.CacheFacadeObj);
+            }
+
+            return deferred.Task;
+        }
+
+        /// <summary>从池复用（同步 API）</summary>
+        private Window OpenFromPoolSync(ViewConfig inViewConfig, WindowRequest inWindowRequest, Window inWindow)
+        {
+            try
+            {
+                this.CacheWindowFromPool(inWindowRequest, inWindow);
+                this.OpenPooledWindow(inViewConfig, inWindowRequest);
+                return inWindowRequest.CacheWindowObj;
+            }
+            catch (Exception e)
+            {
+                this.GetSystem<LoggerSystem>()
+                    ?.ErrStack($"Open window from pool failed, WindowName:{inWindowRequest.Name}, Error:{e}");
+                this.CleanupFailedRequest(inWindowRequest, inWindowRequest.CacheFacadeObj);
+                return null;
+            }
+        }
+
+        private void OpenPooledWindow(ViewConfig inViewConfig, WindowRequest inWindowRequest)
+        {
+            this.AllocOrder(inViewConfig, inWindowRequest);
+            inWindowRequest.SetStage(WindowRequestStage.Layer);
+            this.__WindowSetUpLayer(inViewConfig, inWindowRequest.CacheWindowObj, inWindowRequest.CacheFacadeObj,
+                inWindowRequest.CacheOrderObj);
+            inWindowRequest.SetStage(WindowRequestStage.WindowOpen);
+            inWindowRequest.PrepareReuse();
+            inWindowRequest.Show();
+        }
+
         #endregion
 
         #region Async
 
-        private UniTask _OpenAsync<TW>(ViewConfig inViewConfig) where TW : Window, new()
+        private UniTask _OpenAsync<TW>(ViewConfig inViewConfig, string inKey = null) where TW : Window, new()
         {
-            WindowRequest windowRequest = null;
-            // 正在打开或者已经打开了
-            if (CheckWindowReq(inViewConfig, out var outWindowRequest))
+            // 同一个 ViewConfig + Key 已经打开/正在打开时直接复用它的 task
+            if (CheckWindowReq(inViewConfig, inKey, out var outWindowRequest))
             {
                 return outWindowRequest.Deferred.Task;
             }
-            else if (this.m_Pool.TryGetWindow<TW>(inViewConfig.ID, out var window))
+
+            var requestKey = WindowRequest.MakeRequestKey(inViewConfig.ID, inKey);
+            if (this.TryGetPooledWindow<TW>(requestKey, out var window))
             {
-                windowRequest = CreateRequest(inViewConfig);
-                windowRequest.CacheWindow(window);
-                windowRequest.SetStage(WindowRequestStage.Cache);
+                var pooledRequest = CreateRequest<TW>(inViewConfig, inKey);
+                return OpenFromPoolAsync(inViewConfig, pooledRequest, window);
             }
-            else
-            {
-                windowRequest = CreateRequestAndWindow<TW>(inViewConfig);
-            }
+
+            var windowRequest = CreateRequestAndWindow<TW>(inViewConfig, inKey);
+            AllocOrder(inViewConfig, windowRequest);
             var deferred = new UniTaskCompletionSource();
             windowRequest.SetTaskCompletionSource(deferred);
-            ___AsyncSetFacade(inViewConfig, windowRequest, deferred);
+            ___AsyncSetFacade(inViewConfig, windowRequest, deferred).Forget();
             return deferred.Task;
         }
 
-        private UniTask _OpenAsync<TD>(ViewConfig inViewConfig, TD inViewData) where TD : class
+        private UniTask _OpenAsync<TD>(ViewConfig inViewConfig, TD inViewData, string inKey = null) where TD : class
         {
-            WindowRequest windowRequest = null;
-            bool isFromPool = false;
-            if (CheckWindowReq(inViewConfig, out var outWindowRequest))
+            if (CheckWindowReq(inViewConfig, inKey, out var outWindowRequest))
             {
                 return outWindowRequest.Deferred.Task;
             }
-            else if (this.m_Pool.TryGetWindow(inViewConfig.ID, out var window))
+
+            var requestKey = WindowRequest.MakeRequestKey(inViewConfig.ID, inKey);
+            if (this.TryGetPooledWindow(requestKey, out var window))
             {
-                isFromPool = true;
-                windowRequest = CreateRequest(inViewConfig);
-                windowRequest.CacheWindow(window);
-                windowRequest.SetStage(WindowRequestStage.Cache);
+                var pooledRequest = CreateDataRequest<TD>(inViewConfig, inKey);
+                if (inViewData != null)
+                {
+                    pooledRequest.CacheViewData(inViewData);
+                }
+
+                return OpenFromPoolAsync(inViewConfig, pooledRequest, window);
             }
-            else
-            {
-                windowRequest = CreateRequestByData<TD>(inViewConfig, inViewData);
-            }
+
+            var windowRequest = CreateRequestByData<TD>(inViewConfig, inViewData, inKey);
+            AllocOrder(inViewConfig, windowRequest);
             var deferred = new UniTaskCompletionSource();
             windowRequest.SetTaskCompletionSource(deferred);
-            ___AsyncSetFacade(inViewConfig, windowRequest, deferred, isFromPool);
+            ___AsyncSetFacade(inViewConfig, windowRequest, deferred).Forget();
             return deferred.Task;
         }
 
-        private UniTask _OpenAsync<TW, TD>(ViewConfig inViewConfig, TD inViewData)
+        private UniTask _OpenAsync<TW, TD>(ViewConfig inViewConfig, TD inViewData, string inKey = null)
             where TW : Window, IViewSetData<TD>, new() where TD : class
         {
-            if (CheckWindowReq(inViewConfig, out var outWindowRequest))
+            if (CheckWindowReq(inViewConfig, inKey, out var outWindowRequest))
             {
                 return outWindowRequest.Deferred.Task;
             }
-            else
+
+            var requestKey = WindowRequest.MakeRequestKey(inViewConfig.ID, inKey);
+            if (this.TryGetPooledWindow<TW>(requestKey, out var window))
             {
-                var windowRequest = CreateRequestAndWindow<TW, TD>(inViewConfig, inViewData);
-                var deferred = new UniTaskCompletionSource();
-                windowRequest.SetTaskCompletionSource(deferred);
-                ___AsyncSetFacade(inViewConfig, windowRequest, deferred);
-                return deferred.Task;
+                var pooledRequest = CreateRequest<TW, TD>(inViewConfig, inViewData, inKey);
+                if (inViewData != null)
+                {
+                    pooledRequest.CacheViewData(inViewData);
+                }
+
+                return OpenFromPoolAsync(inViewConfig, pooledRequest, window);
             }
+
+            var windowRequest = CreateRequestAndWindow<TW, TD>(inViewConfig, inViewData, inKey);
+            AllocOrder(inViewConfig, windowRequest);
+            var deferred = new UniTaskCompletionSource();
+            windowRequest.SetTaskCompletionSource(deferred);
+            ___AsyncSetFacade(inViewConfig, windowRequest, deferred).Forget();
+            return deferred.Task;
         }
 
-        private UniTask _OpenAsync(ViewConfig inViewConfig)
+        private UniTask _OpenAsync(ViewConfig inViewConfig, string inKey = null)
         {
-            if (CheckWindowReq(inViewConfig, out var outWindowRequest))
+            if (CheckWindowReq(inViewConfig, inKey, out var outWindowRequest))
             {
                 return outWindowRequest.Deferred.Task;
             }
-            else
+
+            var requestKey = WindowRequest.MakeRequestKey(inViewConfig.ID, inKey);
+            if (this.TryGetPooledWindow(requestKey, out var window))
             {
-                WindowRequestByWindow windowRequest = CreateRequest(inViewConfig);
-                var deferred = new UniTaskCompletionSource();
-                windowRequest.SetTaskCompletionSource(deferred);
-                ___AsyncSetFacade(inViewConfig, windowRequest, deferred);
-                return deferred.Task;
+                var pooledRequest = CreateRequest(inViewConfig, inKey);
+                return OpenFromPoolAsync(inViewConfig, pooledRequest, window);
             }
+
+            WindowRequestByWindow windowRequest = CreateRequest(inViewConfig, inKey);
+            AllocOrder(inViewConfig, windowRequest);
+            var deferred = new UniTaskCompletionSource();
+            windowRequest.SetTaskCompletionSource(deferred);
+            ___AsyncSetFacade(inViewConfig, windowRequest, deferred).Forget();
+            return deferred.Task;
         }
 
-
-        private async void ___AsyncSetFacade(ViewConfig inViewConfig, WindowRequest inWindowRequest, UniTaskCompletionSource inDeferred, bool isFromPool = false)
+        private async UniTaskVoid ___AsyncSetFacade(ViewConfig inViewConfig, WindowRequest inWindowRequest,
+            UniTaskCompletionSource inDeferred)
         {
             UIFacade loadFacade = null;
-            if (isFromPool)
-            {
-                // inWindowRequest.CacheWindow(window);
-                // inWindowRequest.CacheProvider(providerDynamic);
-                // inWindowRequest.SetStage(WindowRequestStage.FacadeLoading);
-            }
-            else
+            try
             {
                 var windowFacadeProvider = this.___CreateWindowFacadeProvider(inWindowRequest.CacheWindowObj);
                 inWindowRequest.CacheProvider(windowFacadeProvider);
                 inWindowRequest.SetStage(WindowRequestStage.FacadeLoading);
-                try
-                {
-                    loadFacade = await windowFacadeProvider.AllocAsync(inViewConfig.ID).Task;
-                }
-                catch (OperationCanceledException)
-                {
-                    inDeferred.TrySetCanceled();
-                    return;
-                }
-                catch (System.Exception e)
-                {
-                    this.GetSystem<LoggerSystem>()?.ErrStack($"OpenWindow facade load failed, WindowName:{inWindowRequest.Name}, Error:{e}");
-                    inDeferred.TrySetCanceled();
-                    return;
-                }
-            }
-            ____AsyncSetFacade(inViewConfig, inWindowRequest, loadFacade, inDeferred, isFromPool);
-        }
 
-        private void ____AsyncSetFacade(ViewConfig inViewConfig, WindowRequest inWindowRequest, UIFacade loadFacade,
-            UniTaskCompletionSource inDeferred, bool isFromPool)
-        {
-            inWindowRequest.CacheFacade(loadFacade);
-            inWindowRequest.SetStage(WindowRequestStage.FacadeLoaded);
-            this.__windowSetupCanvas(loadFacade);
-            inWindowRequest.SetStage(WindowRequestStage.Layer);
-            this.__WindowSetUpLayer(inViewConfig, inWindowRequest.CacheWindowObj, loadFacade);
-            this.__windowSetupRectTransform(loadFacade);
-            inWindowRequest.SetStage(WindowRequestStage.WindowAwake);
-            if (!isFromPool)
-            {
+                loadFacade = await windowFacadeProvider.AllocAsync(inViewConfig.ID).Task;
+                if (inWindowRequest.IsCanceled)
+                {
+                    if (loadFacade != null && loadFacade.gameObject != null)
+                    {
+                        UnityEngine.Object.Destroy(loadFacade.gameObject);
+                    }
+
+                    return;
+                }
+
+                inWindowRequest.CacheFacade(loadFacade);
+                inWindowRequest.SetStage(WindowRequestStage.FacadeLoaded);
+                this.__windowSetupCanvas(loadFacade);
+                inWindowRequest.SetStage(WindowRequestStage.Layer);
+                this.__WindowSetUpLayer(inViewConfig, inWindowRequest.CacheWindowObj, loadFacade,
+                    inWindowRequest.CacheOrderObj);
+                this.__windowSetupRectTransform(loadFacade);
+                inWindowRequest.SetStage(WindowRequestStage.WindowAwake);
                 inWindowRequest.Awake();
+                inWindowRequest.SetStage(WindowRequestStage.WindowOpen);
+                inWindowRequest.Show();
+                inDeferred.TrySetResult();
             }
-
-            inWindowRequest.SetStage(WindowRequestStage.WindowOpen);
-            inWindowRequest.Show();
-            inDeferred.TrySetResult();
+            catch (OperationCanceledException)
+            {
+                this.CleanupFailedRequest(inWindowRequest, loadFacade);
+            }
+            catch (Exception e)
+            {
+                this.GetSystem<LoggerSystem>()
+                    ?.ErrStack($"OpenWindow facade load failed, WindowName:{inWindowRequest.Name}, Error:{e}");
+                this.CleanupFailedRequest(inWindowRequest, loadFacade);
+            }
         }
 
         #endregion
 
         #region Sync
 
-        private TW _OpenSync<TW>(ViewConfig inViewConfig) where TW : Window, new()
+        private TW _OpenSync<TW>(ViewConfig inViewConfig, string inKey = null) where TW : Window, new()
         {
-            if (CheckWindowReq(inViewConfig, out var outWindowRequest))
+            if (CheckWindowReq(inViewConfig, inKey, out var outWindowRequest))
             {
-                return null;
+                return outWindowRequest.CacheWindowObj as TW;
             }
-            else
+
+            var requestKey = WindowRequest.MakeRequestKey(inViewConfig.ID, inKey);
+            if (this.TryGetPooledWindow<TW>(requestKey, out var pooledWindow))
             {
-                var windowRequest = CreateRequestAndWindow<TW>(inViewConfig);
-                return ___SyncSetFacade(inViewConfig, windowRequest) as TW;
+                var pooledRequest = CreateRequest<TW>(inViewConfig, inKey);
+                return OpenFromPoolSync(inViewConfig, pooledRequest, pooledWindow) as TW;
             }
+
+            var windowRequest = CreateRequestAndWindow<TW>(inViewConfig, inKey);
+            AllocOrder(inViewConfig, windowRequest);
+            return ___SyncSetFacade(inViewConfig, windowRequest) as TW;
         }
 
-        private Window _OpenSync<TD>(ViewConfig inViewConfig, TD inViewData) where TD : class
+        private Window _OpenSync<TD>(ViewConfig inViewConfig, TD inViewData, string inKey = null) where TD : class
         {
-            if (CheckWindowReq(inViewConfig, out var outWindowRequest))
+            if (CheckWindowReq(inViewConfig, inKey, out var outWindowRequest))
             {
-                return null;
+                return outWindowRequest.CacheWindowObj;
             }
-            else
+
+            var requestKey = WindowRequest.MakeRequestKey(inViewConfig.ID, inKey);
+            if (this.TryGetPooledWindow(requestKey, out var pooledWindow))
             {
-                var windowRequest = CreateRequestByData<TD>(inViewConfig, inViewData);
-                return ___SyncSetFacade(inViewConfig, windowRequest);
+                var pooledRequest = CreateDataRequest<TD>(inViewConfig, inKey);
+                if (inViewData != null)
+                {
+                    pooledRequest.CacheViewData(inViewData);
+                }
+
+                return OpenFromPoolSync(inViewConfig, pooledRequest, pooledWindow);
             }
+
+            var windowRequest = CreateRequestByData<TD>(inViewConfig, inViewData, inKey);
+            AllocOrder(inViewConfig, windowRequest);
+            return ___SyncSetFacade(inViewConfig, windowRequest);
         }
 
-
-        private TW _OpenSync<TW, TD>(ViewConfig inViewConfig, TD inViewData)
+        private TW _OpenSync<TW, TD>(ViewConfig inViewConfig, TD inViewData, string inKey = null)
             where TW : Window, IViewSetData<TD>, new() where TD : class
         {
-            if (CheckWindowReq(inViewConfig, out var outWindowRequest))
+            if (CheckWindowReq(inViewConfig, inKey, out var outWindowRequest))
             {
-                return null;
+                return outWindowRequest.CacheWindowObj as TW;
             }
-            else
+
+            var requestKey = WindowRequest.MakeRequestKey(inViewConfig.ID, inKey);
+            if (this.TryGetPooledWindow<TW>(requestKey, out var pooledWindow))
             {
-                var windowRequest = CreateRequestAndWindow<TW>(inViewConfig);
-                return ___SyncSetFacade(inViewConfig, windowRequest) as TW;
+                var pooledRequest = CreateRequest<TW, TD>(inViewConfig, inViewData, inKey);
+                if (inViewData != null)
+                {
+                    pooledRequest.CacheViewData(inViewData);
+                }
+
+                return OpenFromPoolSync(inViewConfig, pooledRequest, pooledWindow) as TW;
             }
+
+            var windowRequest = CreateRequestAndWindow<TW, TD>(inViewConfig, inViewData, inKey);
+            AllocOrder(inViewConfig, windowRequest);
+            return ___SyncSetFacade(inViewConfig, windowRequest) as TW;
         }
 
-        private Window _OpenSync(ViewConfig inViewConfig)
+        private Window _OpenSync(ViewConfig inViewConfig, string inKey = null)
         {
-            if (CheckWindowReq(inViewConfig, out var outWindowRequest))
+            if (CheckWindowReq(inViewConfig, inKey, out var outWindowRequest))
             {
-                return null;
+                return outWindowRequest.CacheWindowObj;
             }
-            else
+
+            var requestKey = WindowRequest.MakeRequestKey(inViewConfig.ID, inKey);
+            if (this.TryGetPooledWindow(requestKey, out var pooledWindow))
             {
-                var windowRequest = CreateRequest(inViewConfig);
-                return ___SyncSetFacade(inViewConfig, windowRequest);
+                var pooledRequest = CreateRequest(inViewConfig, inKey);
+                return OpenFromPoolSync(inViewConfig, pooledRequest, pooledWindow);
             }
+
+            var windowRequest = CreateRequest(inViewConfig, inKey);
+            AllocOrder(inViewConfig, windowRequest);
+            return ___SyncSetFacade(inViewConfig, windowRequest);
         }
 
         private Window ___SyncSetFacade(ViewConfig inViewConfig, WindowRequest inWindowRequest)
         {
-            var windowFacadeProvider = this.___CreateWindowFacadeProvider(inWindowRequest.CacheWindowObj);
-            inWindowRequest.CacheProvider(windowFacadeProvider);
-            inWindowRequest.SetStage(WindowRequestStage.FacadeLoading);
-            var facade = windowFacadeProvider.Alloc(inViewConfig.ID);
-            inWindowRequest.CacheFacade(facade);
-            inWindowRequest.SetStage(WindowRequestStage.FacadeLoaded);
-            this.__windowSetupCanvas(facade);
-            this.__windowSetupRectTransform(facade);
-            this.__WindowSetUpLayer(inViewConfig, inWindowRequest.CacheWindowObj, facade);
-            inWindowRequest.SetStage(WindowRequestStage.Layer);
-            inWindowRequest.SetStage(WindowRequestStage.WindowAwake);
-            inWindowRequest.Awake();
-            inWindowRequest.SetStage(WindowRequestStage.WindowOpen);
-            inWindowRequest.Show();
-            return inWindowRequest.CacheWindowObj;
+            try
+            {
+                var windowFacadeProvider = this.___CreateWindowFacadeProvider(inWindowRequest.CacheWindowObj);
+                inWindowRequest.CacheProvider(windowFacadeProvider);
+                inWindowRequest.SetStage(WindowRequestStage.FacadeLoading);
+                var facade = windowFacadeProvider.Alloc(inViewConfig.ID);
+                inWindowRequest.CacheFacade(facade);
+                inWindowRequest.SetStage(WindowRequestStage.FacadeLoaded);
+                this.__windowSetupCanvas(facade);
+                this.__windowSetupRectTransform(facade);
+                inWindowRequest.SetStage(WindowRequestStage.Layer);
+                this.__WindowSetUpLayer(inViewConfig, inWindowRequest.CacheWindowObj, facade,
+                    inWindowRequest.CacheOrderObj);
+                inWindowRequest.SetStage(WindowRequestStage.WindowAwake);
+                inWindowRequest.Awake();
+                inWindowRequest.SetStage(WindowRequestStage.WindowOpen);
+                inWindowRequest.Show();
+                return inWindowRequest.CacheWindowObj;
+            }
+            catch (Exception e)
+            {
+                this.GetSystem<LoggerSystem>()
+                    ?.ErrStack($"OpenWindow sync failed, WindowName:{inWindowRequest.Name}, Error:{e}");
+                this.CleanupFailedRequest(inWindowRequest, inWindowRequest.CacheFacadeObj);
+                return null;
+            }
         }
 
         #endregion
 
-        #region WinodwLife
+        #region WindowLife
 
         private IUIFacadeProvider ___CreateWindowFacadeProvider(Window inWindow)
         {

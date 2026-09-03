@@ -11,8 +11,8 @@ namespace NFramework.ModuleSystem
         }
 
         /// <summary>
-        /// 设置viewConfig, 这一步是必须的，不然UI系统不会正常运行
         /// </summary>
+        /// 设置viewConfig, 这一步是必须的，不然UI系统不会正常运行
         public void RegisterConfig(Dictionary<string, ViewConfig> inConfigMap,
             Dictionary<System.Type, string> inType2ConfigIDMap)
         {

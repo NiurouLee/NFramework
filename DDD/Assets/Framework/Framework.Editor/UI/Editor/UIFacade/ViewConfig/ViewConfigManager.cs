@@ -19,7 +19,6 @@ namespace NFramework.ModuleSystem
             public string AssetID;
             public ushort Layer;
             public bool IsWindow;
-            public bool IsFixedLayer;
         }
 
         [System.Serializable]
@@ -134,8 +133,7 @@ namespace NFramework.ModuleSystem
                 ID = configID,
                 AssetID = assetID ?? "",
                 Layer = viewConfig.Layer,
-                IsWindow = viewConfig.IsWindow,
-                IsFixedLayer = viewConfig.IsFixedLayer
+                IsWindow = viewConfig.IsWindow
             };
 
             // 更新或添加配置
@@ -269,52 +267,6 @@ namespace NFramework.ModuleSystem
         }
 
         /// <summary>
-        /// 检查层级是否与其他ViewConfig重复
-        /// </summary>
-        public static string CheckLayerDuplicate(ushort layer, string currentConfigID)
-        {
-            ViewConfigsContainer container = LoadAllViewConfigs();
-
-            foreach (var data in container.Configs)
-            {
-                if (data.ID == currentConfigID) continue;
-
-                if (data.IsFixedLayer && data.Layer == layer)
-                {
-                    return data.ID;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// 获取层级冲突信息
-        /// </summary>
-        public static string GetLayerConflictInfo(ushort layer, string currentConfigID)
-        {
-            List<string> conflicts = new List<string>();
-            ViewConfigsContainer container = LoadAllViewConfigs();
-
-            foreach (var data in container.Configs)
-            {
-                if (data.ID == currentConfigID) continue;
-
-                if (data.IsFixedLayer && data.Layer == layer)
-                {
-                    conflicts.Add(data.ID);
-                }
-            }
-
-            if (conflicts.Count > 0)
-            {
-                return string.Join(", ", conflicts);
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// 运行时加载所有ViewConfig到字典中
         /// </summary>
         public static Dictionary<string, ViewConfig> LoadAllViewConfigsToMap()
@@ -333,7 +285,6 @@ namespace NFramework.ModuleSystem
                     config.AssetID = data.AssetID;
                     config.SetLayer(data.Layer);
                     config.SetWindow(data.IsWindow);
-                    config.SetFixedLayer(data.IsFixedLayer);
                     
                     configMap[data.ID] = config;
                 }

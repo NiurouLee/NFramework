@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a771a6f88de4c69b351725601199af2, type: 3}
   m_Name: UISystemConfig
   m_EditorClassIdentifier: 
-  LRUCount: 0
+  EnableWindowPool: 1
+  WindowPoolSize: 8
   LogicScriptGenerateRootPath: Assets/GameLogic/LogicModule
   ViewConfigGeneratePath: Assets/GameLogic/Generate/ViewConfig
   ViewConfigDataRoot: Assets/GameLogic/UI/Config

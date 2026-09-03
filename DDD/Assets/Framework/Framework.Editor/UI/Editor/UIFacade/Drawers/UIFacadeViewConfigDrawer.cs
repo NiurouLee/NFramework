@@ -3,6 +3,7 @@ using UnityEngine;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.Utilities.Editor;
 using System.IO;
+using System;
 
 namespace NFramework.ModuleSystem
 {
@@ -54,18 +55,15 @@ namespace NFramework.ModuleSystem
 
                 EditorGUILayout.Space(8);
 
-                // 固定层级设置（可编辑）
-                DrawFixedLayer(facade, viewConfig);
-
-                EditorGUILayout.Space(5);
-
-                // UI层级设置（始终可编辑）
-                DrawUILayer(facade, viewConfig);
-
-                EditorGUILayout.Space(5);
-
-                // 窗口模式设置（可编辑）
+                // 先勾选是否 Window，再决定是否显示层级选择
                 DrawWindowMode(viewConfig);
+
+                EditorGUILayout.Space(5);
+
+                if (viewConfig.IsWindow)
+                {
+                    DrawUILayer(facade, viewConfig);
+                }
 
                 if (EditorGUI.EndChangeCheck())
                 {
@@ -112,55 +110,21 @@ namespace NFramework.ModuleSystem
             EditorGUILayout.EndHorizontal();
         }
 
-        private static void DrawFixedLayer(UIFacade facade, ViewConfig viewConfig)
-        {
-            bool currentIsFixedLayer = viewConfig.IsFixedLayer;
-            bool newIsFixedLayer = EditorGUILayout.Toggle("是否固定层级", currentIsFixedLayer);
-            if (currentIsFixedLayer != newIsFixedLayer)
-            {
-                viewConfig.SetFixedLayer(newIsFixedLayer);
-                EditorUtility.SetDirty(facade);
-            }
-        }
-
         private static void DrawUILayer(UIFacade facade, ViewConfig viewConfig)
         {
-            ushort currentLayer = viewConfig.Layer;
-            ushort newLayer = (ushort)SirenixEditorFields.IntField("UI层级", currentLayer);
+            UILayer currentLayer = viewConfig.Layer == 0
+                ? UILayer.Basic
+                : (System.Enum.IsDefined(typeof(UILayer), (int)viewConfig.Layer) ? (UILayer)viewConfig.Layer : UILayer.Basic);
+
+            UILayer newLayer = (UILayer)EditorGUILayout.EnumPopup("UI层级", currentLayer);
             if (currentLayer != newLayer)
             {
-                // 固定层级时才检查层级重复，非固定层级不参与冲突检查
-                if (viewConfig.IsFixedLayer &&
-                    UIFacadeInspectorViewConfigBehavior.CheckLayerDuplicate(facade, viewConfig, newLayer,
-                        out string duplicateConfigID))
-                {
-                    if (EditorUtility.DisplayDialog("层级重复警告",
-                            $"层级 {newLayer} 已被配置 '{duplicateConfigID}' 使用，是否继续？",
-                            "继续", "取消"))
-                    {
-                        viewConfig.SetLayer(newLayer);
-                    }
-                }
-                else
-                {
-                    viewConfig.SetLayer(newLayer);
-                }
+                viewConfig.SetLayer((ushort)newLayer);
+                EditorUtility.SetDirty(facade);
             }
 
-            if (viewConfig.IsFixedLayer)
-            {
-                // 固定层级时显示冲突提示
-                string conflictInfo = UIFacadeInspectorViewConfigBehavior.GetLayerConflictInfo(facade, viewConfig);
-                if (!string.IsNullOrEmpty(conflictInfo))
-                {
-                    EditorGUILayout.HelpBox($"⚠ 层级冲突: 层级 {viewConfig.Layer} 已被以下配置使用: {conflictInfo}",
-                        MessageType.Warning);
-                }
-            }
-            else
-            {
-                EditorGUILayout.HelpBox("非固定层级：当前层级值仅作参考，实际显示顺序由堆叠系统在运行时管理。", MessageType.Info);
-            }
+            EditorGUILayout.HelpBox("窗口会进入该 UILayer 对应的 Stack 层级，同一层级内按打开顺序叠加。",
+                MessageType.Info);
         }
 
         private static void DrawWindowMode(ViewConfig viewConfig)
@@ -170,6 +134,10 @@ namespace NFramework.ModuleSystem
             if (currentIsWindow != newIsWindow)
             {
                 viewConfig.SetWindow(newIsWindow);
+                if (newIsWindow && viewConfig.Layer == 0)
+                {
+                    viewConfig.SetLayer((ushort)UILayer.Basic);
+                }
             }
         }
 

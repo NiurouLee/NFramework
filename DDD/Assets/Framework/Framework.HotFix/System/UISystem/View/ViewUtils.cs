@@ -14,7 +14,6 @@ namespace NFramework.ModuleSystem
             {
                 return true;
             }
-
             outComponent = null;
             return false;
         }
@@ -27,6 +26,20 @@ namespace NFramework.ModuleSystem
             }
 
             component = inView.AddComponent<T>();
+            return component;
+        }
+
+        /// <summary>
+        /// 获取或创建指定 Name 的组件，方便同类型多 Name 组件的按需挂载。
+        /// </summary>
+        public static T CheckAndAdd<T>(View inView, string inName) where T : ViewComponent, new()
+        {
+            if (inView.TryGetComponent<T>(inName, out var component))
+            {
+                return component;
+            }
+
+            component = inView.AddComponent<T>(inName);
             return component;
         }
 

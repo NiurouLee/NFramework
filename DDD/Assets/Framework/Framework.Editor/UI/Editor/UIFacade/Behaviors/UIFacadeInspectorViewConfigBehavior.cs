@@ -108,25 +108,5 @@ namespace NFramework.ModuleSystem
             Debug.Log($"ViewConfig已保存: {facade.m_ScriptName}");
         }
 
-        /// <summary>
-        /// 检查层级是否重复
-        /// </summary>
-        public static bool CheckLayerDuplicate(UIFacade facade, ViewConfig viewConfig, ushort newLayer,
-            out string duplicateConfigID)
-        {
-            duplicateConfigID = "";
-            string configID = !string.IsNullOrEmpty(facade.m_ScriptName) ? facade.m_ScriptName : viewConfig.ID;
-            duplicateConfigID = ViewConfigManager.CheckLayerDuplicate(newLayer, configID);
-            return !string.IsNullOrEmpty(duplicateConfigID);
-        }
-
-        /// <summary>
-        /// 获取层级冲突信息
-        /// </summary>
-        public static string GetLayerConflictInfo(UIFacade facade, ViewConfig viewConfig)
-        {
-            string configID = !string.IsNullOrEmpty(facade.m_ScriptName) ? facade.m_ScriptName : viewConfig.ID;
-            return ViewConfigManager.GetLayerConflictInfo(viewConfig.Layer, configID);
-        }
     }
 }

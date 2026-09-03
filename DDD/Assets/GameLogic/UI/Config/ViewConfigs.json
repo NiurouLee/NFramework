@@ -4,25 +4,22 @@
             "ID": "ExampleExwindow",
             "Namespace": "",
             "AssetID": "Exwindow",
-            "Layer": 0,
-            "IsWindow": true,
-            "IsFixedLayer": false
+            "Layer": 3000,
+            "IsWindow": true
         },
         {
             "ID": "MainWindow",
             "Namespace": "",
             "AssetID": "MainWindow",
-            "Layer": 0,
-            "IsWindow": true,
-            "IsFixedLayer": false
+            "Layer": 3000,
+            "IsWindow": true
         },
         {
             "ID": "EventcenterWindow",
             "Namespace": "",
             "AssetID": "EentCenterWindow",
-            "Layer": 0,
-            "IsWindow": true,
-            "IsFixedLayer": false
+            "Layer": 3000,
+            "IsWindow": true
         }
     ]
 }

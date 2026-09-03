@@ -40,7 +40,7 @@ namespace NFramework.ModuleSystem
                 state.ViewConfig.ID = state.Facade.m_ScriptName;
             }
 
-            if (state.ViewConfig.Layer == 0 && !state.ViewConfig.IsWindow && !state.ViewConfig.IsFixedLayer)
+            if (state.ViewConfig.Layer == 0 && !state.ViewConfig.IsWindow)
             {
                 state.ViewConfig.SetLayer(0);
                 state.ViewConfig.SetWindow(false);
@@ -73,7 +73,6 @@ namespace NFramework.ModuleSystem
             state.ViewConfig.AssetID = data.AssetID;
             state.ViewConfig.SetLayer(data.Layer);
             state.ViewConfig.SetWindow(data.IsWindow);
-            state.ViewConfig.SetFixedLayer(data.IsFixedLayer);
         }
     }
 }

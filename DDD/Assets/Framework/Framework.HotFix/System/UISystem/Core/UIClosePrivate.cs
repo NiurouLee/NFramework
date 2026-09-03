@@ -1,100 +1,207 @@
-using System.Collections.Generic;
-using    NFramework.ModuleSystem;
-using   NFramework.ModuleSystem;
-using Unity.VisualScripting;
+using UnityEngine;
 
 namespace NFramework.ModuleSystem
 {
     public partial class UISystem
     {
-
-        public Dictionary<string, UIPoolEntity> PoolDictionary = new Dictionary<string, UIPoolEntity>();
-        private void _Close(string inWindowName)
+        /// <summary>按窗口ID + key 关闭，key 不传默认关单例实例</summary>
+        private void _Close(string inWindowName, string inKey = null)
         {
             if (string.IsNullOrEmpty(inWindowName))
             {
-                this.GetSystem<LoggerSystem>().ErrStack($"UIM::Close inWindowName is null");
-
+                this.GetSystem<LoggerSystem>()?.ErrStack("UIM::Close inWindowName is null");
+                return;
             }
-            var vc = GetViewConfig(inWindowName);
-            if (this.CheckWindowReq(vc, out var outWindowRequest))
+
+            var requestKey = WindowRequest.MakeRequestKey(inWindowName, inKey);
+            if (this.TryGetWindowRequest(requestKey, out var outWindowRequest))
             {
-                if (outWindowRequest.Stage == WindowRequestStage.WindowOpen)
-                {
-                    this.__Close(outWindowRequest.CacheWindowObj, vc);
-                }
-                else if (outWindowRequest.Stage == WindowRequestStage.FacadeLoading)
-                {
-                    outWindowRequest.Cancel();
-                }
+                this.CloseRequest(outWindowRequest);
+            }
+        }
+
+        /// <summary>直接关闭指定窗口实例，适合同类型打开多个实例时由 window.Close() 调用</summary>
+        private void _Close(Window inWindow)
+        {
+            if (inWindow == null)
+            {
+                this.GetSystem<LoggerSystem>()?.ErrStack("UIM::Close inWindow is null");
+                return;
+            }
+
+            if (this.TryGetWindowRequest(inWindow, out var outWindowRequest))
+            {
+                this.CloseRequest(outWindowRequest);
+            }
+            else
+            {
+                this.GetSystem<LoggerSystem>()
+                    ?.ErrStack($"UIM::Close window not in WindowRequestDictionary, WindowName:{inWindow.GetType().Name}");
+            }
+        }
+
+        private void CloseRequest(WindowRequest inWindowRequest)
+        {
+            if (inWindowRequest == null)
+            {
+                return;
+            }
+
+            switch (inWindowRequest.Stage)
+            {
+                case WindowRequestStage.WindowOpen:
+                case WindowRequestStage.WindowOpenAnim:
+                    this.__Close(inWindowRequest);
+                    break;
+                case WindowRequestStage.FacadeLoading:
+                    this.CancelRequest(inWindowRequest);
+                    break;
+                default:
+                    this.GetSystem<LoggerSystem>()?.ErrStack(
+                        $"UIM::Close ignored, WindowName:{inWindowRequest.Name}, Key:{inWindowRequest.keyObj}, Stage:{inWindowRequest.Stage}");
+                    break;
             }
         }
 
         /// <summary>
-        ///  关键所在，要考虑清除到底缓存什么，
+        /// 正常关闭：出层、归还 order、从请求表移除后入 LRU 窗口池。
+        /// 池容量满时由 LRU 淘汰最久未使用的窗口，淘汰项会真正销毁。
         /// </summary>
-        /// <param name="inWindow"></param>
-        /// <param name="inViewConfig"></param>
-        private void __Close(Window inWindow, ViewConfig inViewConfig)
+        private void __Close(WindowRequest inWindowRequest)
         {
+            var inWindow = inWindowRequest.CacheWindowObj;
+            if (inWindow == null)
+            {
+                this.RemoveWindowRequest(inWindowRequest.RequestKey);
+                return;
+            }
+
             inWindow.Hide();
-            if (inViewConfig.IsFixedLayer)
+            if (inWindowRequest.Config != null &&
+                this.TryGetLayerStack(inWindowRequest.Config.Layer, out var layerStack))
             {
-                this.m_FixedLayer.PopWindow(inViewConfig);
+                layerStack.PopWindow(inWindow, inWindowRequest.CacheOrderObj);
             }
             else
             {
-                this.m_StackLayer.PopWindow(inViewConfig);
+                this.GetSystem<LoggerSystem>()
+                    ?.ErrStack($"UIM::Close can not find layer stack, WindowID:{inWindowRequest.Name}, " +
+                               $"Layer:{inWindowRequest.Config?.Layer}");
             }
-            var provider = inWindow.Provider as UIFacadeProviderDynamic;
-            var resLoader = inWindow.GetComponent<ViewResLoadComponent>();
+
+            this.RemoveWindowRequest(inWindowRequest.RequestKey);
+            if (this.WindowPoolEnabled)
+            {
+                this.CacheWindowToPool(inWindowRequest);
+            }
+            else
+            {
+                this.DestroyWindowObject(inWindow);
+            }
+        }
+
+        /// <summary>把窗口收进 LRU 池；没有完整 Facade 时无法复用，直接销毁</summary>
+        private void CacheWindowToPool(WindowRequest inWindowRequest)
+        {
+            var window = inWindowRequest.CacheWindowObj;
+            var facade = inWindowRequest.CacheFacadeObj ?? window?.Facade;
+            if (window == null || facade == null)
+            {
+                if (facade != null && facade.gameObject != null)
+                {
+                    Object.Destroy(facade.gameObject);
+                }
+
+                window?.Destroy();
+                return;
+            }
+
+            // 回池时不改父节点：窗口已从层逻辑移除并 Hide，留在原地即可，下次复用再挂回同层
+            this.m_Pool.Cache(inWindowRequest.RequestKey, window);
+        }
+
+        /// <summary>加载中取消/失败：移除请求、归还 order、销毁半成品窗口</summary>
+        private void CancelRequest(WindowRequest inWindowRequest)
+        {
+            if (inWindowRequest == null)
+            {
+                return;
+            }
+
+            inWindowRequest.MarkCanceled();
+            this.RemoveWindowRequest(inWindowRequest.RequestKey);
+            this.TryPopOrReturnLayer(inWindowRequest);
+            inWindowRequest.Deferred?.TrySetCanceled();
+
+            var window = inWindowRequest.CacheWindowObj;
+            var facade = inWindowRequest.CacheFacadeObj ?? window?.Facade;
+            var facadeGo = facade != null && facade.gameObject != null ? facade.gameObject : null;
+            window?.Destroy();
+            if (facadeGo != null)
+            {
+                Object.Destroy(facadeGo);
+            }
+        }
+
+        /// <summary>异步加载/打开过程出现异常时统一清理（不会入池）</summary>
+        internal void CleanupFailedRequest(WindowRequest inWindowRequest, UIFacade inLoadFacade)
+        {
+            if (inWindowRequest == null)
+            {
+                return;
+            }
+
+            this.RemoveWindowRequest(inWindowRequest.RequestKey);
+            this.TryPopOrReturnLayer(inWindowRequest);
+            inWindowRequest.Deferred?.TrySetCanceled();
+
+            var window = inWindowRequest.CacheWindowObj;
+            var facade = inLoadFacade ?? inWindowRequest.CacheFacadeObj ?? window?.Facade;
+            var facadeGo = facade != null && facade.gameObject != null ? facade.gameObject : null;
+            window?.Destroy();
+            if (facadeGo != null)
+            {
+                Object.Destroy(facadeGo);
+            }
+        }
+
+        /// <summary>请求异常清理：已入层则从层移除并归还 order，否则只归还 order</summary>
+        private void TryPopOrReturnLayer(WindowRequest inWindowRequest)
+        {
+            if (inWindowRequest == null || inWindowRequest.Config == null)
+            {
+                return;
+            }
+
+            if (this.TryGetLayerStack(inWindowRequest.Config.Layer, out var layerStack))
+            {
+                var window = inWindowRequest.CacheWindowObj;
+                if (window != null && layerStack.Contains(window))
+                {
+                    layerStack.PopWindow(window, inWindowRequest.CacheOrderObj);
+                }
+                else
+                {
+                    layerStack.ReturnOrder(inWindowRequest.CacheOrderObj);
+                }
+            }
+        }
+
+        /// <summary>真正销毁一个不再进入池的窗口（池淘汰 / 异常兜底）</summary>
+        internal void DestroyWindowObject(Window inWindow)
+        {
+            if (inWindow == null)
+            {
+                return;
+            }
+
             var facade = inWindow.Facade;
-            this.RemoveWindowRequest(inViewConfig.ID);
+            var facadeGo = facade != null && facade.gameObject != null ? facade.gameObject : null;
             inWindow.Destroy();
-
-            // //入池
-            // var poolEntity = new UIPoolEntity()
-            // {
-            //     ID = inViewConfig.ID,
-            //     Entity = provider,
-            //     ResLoader = resLoader,
-            //     Facade = facade,
-            //     Window = inWindow
-            // };
-            // this.PoolDictionary.Add(inViewConfig.ID, poolEntity);
-        }
-
-        public bool TryGetByPool(string inID, out UIFacadeProviderDynamic providerDynamic, out ViewResLoadComponent resLoader, out UIFacade facade, out Window window)
-        {
-            if (this.PoolDictionary.TryGetValue(inID, out var poolEntity))
+            if (facadeGo != null)
             {
-                providerDynamic = poolEntity.Entity;
-                resLoader = poolEntity.ResLoader;
-                facade = poolEntity.Facade;
-                window = poolEntity.Window;
-                this.PoolDictionary.Remove(inID);
-                return true;
+                Object.Destroy(facadeGo);
             }
-            else
-            {
-                providerDynamic = null;
-                resLoader = null;
-                facade = null;
-                window = null;
-                return false;
-            }
-        }
-
-
-        public struct UIPoolEntity
-        {
-            public string ID;
-            public UIFacadeProviderDynamic Entity;
-            public ViewResLoadComponent ResLoader;
-            public UIFacade Facade;
-            public Window Window;
         }
     }
-
-
 }

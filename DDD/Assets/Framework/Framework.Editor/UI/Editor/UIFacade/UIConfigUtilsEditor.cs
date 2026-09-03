@@ -70,7 +70,6 @@ namespace NFramework.ModuleSystem
                                 config.AssetID = data.AssetID;
                                 config.SetLayer(data.Layer);
                                 config.SetWindow(data.IsWindow);
-                                config.SetFixedLayer(data.IsFixedLayer);
                                 return;
                             }
                         }
@@ -90,7 +89,6 @@ namespace NFramework.ModuleSystem
             public string AssetID;
             public ushort Layer;
             public bool IsWindow;
-            public bool IsFixedLayer;
         }
 
         [System.Serializable]

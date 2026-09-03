@@ -13,7 +13,17 @@ namespace Game.Logic
         [System.Serializable]
         private class ViewConfigsContainer
         {
-            public List<ViewConfig> Configs = new List<ViewConfig>();
+            public List<ViewConfigData> Configs = new List<ViewConfigData>();
+        }
+
+        [System.Serializable]
+        private class ViewConfigData
+        {
+            public string ID;
+            public string Namespace;
+            public string AssetID;
+            public ushort Layer;
+            public bool IsWindow;
         }
 
         public Dictionary<string, ViewConfig> ConfigMap { get; private set; }
@@ -73,7 +83,6 @@ namespace Game.Logic
                         config.AssetID = data.AssetID;
                         config.SetLayer(data.Layer);
                         config.SetWindow(data.IsWindow);
-                        config.SetFixedLayer(data.IsFixedLayer);
                         this.ConfigMap[data.ID] = config;
                     }
                 }

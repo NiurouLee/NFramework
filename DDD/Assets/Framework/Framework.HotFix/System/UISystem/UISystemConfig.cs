@@ -13,10 +13,12 @@ namespace NFramework.ModuleSystem
     /// </summary>
     public class UISystemConfig : ScriptableObject
     {
-        /// <summary>
-        /// Window LRU Count
-        /// </summary>
-        public int LRUCount;
+        /// <summary>是否启用窗口 LRU 池</summary>
+        public bool EnableWindowPool;
+
+        /// <summary>窗口 LRU 池容量；启用时至少为 1</summary>
+        [FormerlySerializedAs("LRUCount")]
+        public int WindowPoolSize = 8;
 
         ///<summary>
         /// 逻辑脚本生成根目录（保留字段，兼容旧配置）

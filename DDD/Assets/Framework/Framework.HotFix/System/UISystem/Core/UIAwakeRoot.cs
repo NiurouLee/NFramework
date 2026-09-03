@@ -1,33 +1,36 @@
-using GameObject = UnityEngine.GameObject;
-using Vector3 = UnityEngine.Vector3;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
-
+using GameObject = UnityEngine.GameObject;
+using Vector3 = UnityEngine.Vector3;
 
 namespace NFramework.ModuleSystem
 {
     public partial class UISystem : FrameworkSystemModuleBase
     {
         private GameObject uiRoot;
+
         public Camera UICamera { get; private set; }
         public Canvas UICanvas { get; private set; }
         public Transform UICanvasTrf { get; private set; }
         public UnityEngine.EventSystems.EventSystem EventSystem { get; private set; }
 
         private CanvasScaler scaler;
-        private UIFixedLayerServices m_FixedLayer;
-        private UIStackLayerServices m_StackLayer;
-        private WindowPoolServices m_Pool;
 
+        /// <summary>每个 UILayer 一个独立 Stack 层级：Layer 枚举值 -> 层级服务</summary>
+        private Dictionary<ushort, UIStackLayerServices> m_LayerStacks;
+
+        private WindowPoolServices m_Pool;
+        private bool m_EnableWindowPool;
 
         public override void Awake()
         {
             GetSystem<LoggerSystem>().Error?.Print("UIM Awake");
             base.Awake();
-            var _go = UnityEngine.Resources.Load<GameObject>("UIROOT");
-            var _root = UnityEngine.Object.Instantiate(_go);
-            this.AwakeRoot(_root);
+            var go = UnityEngine.Resources.Load<GameObject>("UIROOT");
+            var root = UnityEngine.Object.Instantiate(go);
+            this.AwakeRoot(root);
             this.AwakeConfigServices();
             this.AwakeLayerServices();
             this.AwakePoolServices();
@@ -50,56 +53,84 @@ namespace NFramework.ModuleSystem
 
         public void AwakeLayerServices()
         {
-            var fixedLayerGo = new GameObject("FixedLayer");
-            var fixedLayerRectTransform = fixedLayerGo.AddComponent<RectTransform>();
-            fixedLayerRectTransform.SetParent(this.UICanvasTrf);
-            fixedLayerRectTransform.localPosition = new Vector3(0, 0, 0);
-            fixedLayerRectTransform.localScale = new Vector3(1, 1, 1);
-            fixedLayerRectTransform.localRotation = Quaternion.identity;
-            fixedLayerRectTransform.anchorMin = new Vector2(0, 0);
-            fixedLayerRectTransform.anchorMax = new Vector2(1, 1);
-            fixedLayerRectTransform.pivot = new Vector2(0.5f, 0.5f);
-            fixedLayerRectTransform.anchoredPosition = new Vector2(0, 0);
-            fixedLayerRectTransform.sizeDelta = new Vector2(0, 0);
-            this.m_FixedLayer = new UIFixedLayerServices(this, fixedLayerGo);
+            m_LayerStacks = new Dictionary<ushort, UIStackLayerServices>();
 
+            foreach (UILayer layer in System.Enum.GetValues(typeof(UILayer)))
+            {
+                var layerGo = new GameObject($"[{layer}]");
+                var layerRectTransform = layerGo.AddComponent<RectTransform>();
+                layerRectTransform.SetParent(this.UICanvasTrf);
+                layerRectTransform.localPosition = new Vector3(0, 0, 0);
+                layerRectTransform.localScale = new Vector3(1, 1, 1);
+                layerRectTransform.localRotation = Quaternion.identity;
+                layerRectTransform.anchorMin = new Vector2(0, 0);
+                layerRectTransform.anchorMax = new Vector2(1, 1);
+                layerRectTransform.pivot = new Vector2(0.5f, 0.5f);
+                layerRectTransform.anchoredPosition = new Vector2(0, 0);
+                layerRectTransform.sizeDelta = new Vector2(0, 0);
 
-            var stackLayerGo = new GameObject("StackLayer");
-            var stackLayerRectTransform = stackLayerGo.AddComponent<RectTransform>();
-            stackLayerRectTransform.SetParent(this.UICanvasTrf);
-            stackLayerRectTransform.localPosition = new Vector3(0, 0, 0);
-            stackLayerRectTransform.localScale = new Vector3(1, 1, 1);
-            stackLayerRectTransform.anchorMin = new Vector2(0, 0);
-            stackLayerRectTransform.anchorMax = new Vector2(1, 1);
-            stackLayerRectTransform.pivot = new Vector2(0.5f, 0.5f);
-            stackLayerRectTransform.anchoredPosition = new Vector2(0, 0);
-            stackLayerRectTransform.sizeDelta = new Vector2(0, 0);
-            stackLayerRectTransform.localRotation = Quaternion.identity;
-            this.m_StackLayer = new UIStackLayerServices(this, stackLayerGo);
+                var stack = new UIStackLayerServices(this, layerGo, (ushort)layer);
+                m_LayerStacks.Add((ushort)layer, stack);
+            }
         }
-
 
         private void AwakePoolServices()
         {
-            this.m_Pool = new WindowPoolServices();
+            var uiConfig = NFROOT.Instance?.Config?.UISystemConfig;
+            m_EnableWindowPool = uiConfig != null && uiConfig.EnableWindowPool;
+
+            if (!m_EnableWindowPool)
+            {
+                this.m_Pool = null;
+                return;
+            }
+
+            int poolSize = Mathf.Clamp(uiConfig.WindowPoolSize, 1, 256);
+            this.m_Pool = new WindowPoolServices(this, poolSize);
         }
 
-        public void __WindowSetUpLayer(ViewConfig inViewConfig, Window inWindow, UIFacade inFacade)
+        /// <summary>窗口池当前是否启用</summary>
+        private bool WindowPoolEnabled => this.m_EnableWindowPool && this.m_Pool != null;
+
+        /// <summary>
+        /// 根据 ViewConfig.Layer 获取对应 Stack。
+        /// Layer 为 0 表示配置里还没选层级，默认进 Basic，避免旧配置直接失效。
+        /// </summary>
+        private bool TryGetLayerStack(ushort inLayer, out UIStackLayerServices outLayerStack)
         {
-            if (inViewConfig.IsFixedLayer)
+            ushort layer = inLayer == 0 ? (ushort)UILayer.Basic : inLayer;
+            if (m_LayerStacks != null && m_LayerStacks.TryGetValue(layer, out outLayerStack))
             {
-                this.m_FixedLayer.PushWindow(inWindow, inViewConfig, inFacade);
+                return true;
+            }
+
+            outLayerStack = null;
+            return false;
+        }
+
+        public void __WindowSetUpLayer(ViewConfig inViewConfig, Window inWindow, UIFacade inFacade,int inOrder)
+        {
+            if (inViewConfig == null)
+            {
+                this.GetSystem<LoggerSystem>()?.ErrStack("__WindowSetUpLayer inViewConfig is null");
+                return;
+            }
+
+            if (this.TryGetLayerStack(inViewConfig.Layer, out var layerStack))
+            {
+                layerStack.PushWindow(inWindow, inViewConfig, inFacade,inOrder);
             }
             else
             {
-                this.m_StackLayer.PushWindow(inWindow, inViewConfig, inFacade);
+                this.GetSystem<LoggerSystem>()
+                    ?.ErrStack($"__WindowSetUpLayer can not find layer:{inViewConfig.Layer}, WindowID:{inViewConfig.ID}");
             }
         }
 
         private void __windowSetupCanvas(UIFacade inFacade)
         {
-            var canvas = inFacade.gameObject.GetOrAddComponent<UnityEngine.Canvas>();
-            var graphicRaycaster = inFacade.gameObject.GetOrAddComponent<UnityEngine.UI.GraphicRaycaster>();
+            var canvas = inFacade.gameObject.GetOrAddComponent<Canvas>();
+            var graphicRaycaster = inFacade.gameObject.GetOrAddComponent<GraphicRaycaster>();
             canvas.renderMode = UnityEngine.RenderMode.ScreenSpaceCamera;
             canvas.worldCamera = this.UICamera;
             canvas.overrideSorting = true;
@@ -107,7 +138,7 @@ namespace NFramework.ModuleSystem
 
         private void __windowSetupRectTransform(UIFacade inFacade)
         {
-            var rectTransform = inFacade.gameObject.GetOrAddComponent<UnityEngine.RectTransform>();
+            var rectTransform = inFacade.gameObject.GetOrAddComponent<RectTransform>();
             rectTransform.anchorMin = new Vector2(0, 0);
             rectTransform.anchorMax = new Vector2(1, 1);
             rectTransform.pivot = new Vector2(0.5f, 0.5f);

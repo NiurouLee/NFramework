@@ -38,7 +38,7 @@ namespace Game.Logic
 
         private LoopListViewComponent m_LoopScrollViewList;
 
-        // private SimpleListViewComponent m_SimpleScrollViewList;
+        private SimpleListViewComponent m_SimpleScrollViewList;
         protected override void OnBindFacade()
         {
             this.BindClick(Button, OnButtonClick);
@@ -59,12 +59,14 @@ namespace Game.Logic
         private void OnButtonClick(NSimpleButton obj)
         {
             this.m_LoopScrollViewList.SetList(this.m_DataList);
+            this.m_SimpleScrollViewList?.SetList(this.m_DataList);
             for (int i = 0; i < 10; i++)
             {
                 m_DataList.Add(new FunctionItemData() { Name = i.ToString() });
             }
 
             this.m_LoopScrollViewList.Refill();
+            this.m_SimpleScrollViewList?.Refill();
         }
 
         private void OnButton_openEventCenterClick(NSimpleButton obj)
@@ -76,6 +78,7 @@ namespace Game.Logic
         {
             this.m_DataList.Clear();
             this.m_LoopScrollViewList.Refill();
+            this.m_SimpleScrollViewList?.Refill();
         }
 
         #region Live
@@ -84,6 +87,7 @@ namespace Game.Logic
         {
             base.OnAwake();
             InitLoopListView();
+            InitSimpleListView();
         }
 
         protected override void OnShow()
@@ -103,12 +107,71 @@ namespace Game.Logic
                 .Init("LoopListView1", LoopScrollViewPrefabMap, OnCreateLoopItem, OnBindLoopItem);
         }
 
+        private void InitSimpleListView()
+        {
+            PrepareSimpleScrollContent();
+
+            m_SimpleScrollViewList = new SimpleListViewComponent();
+            m_SimpleScrollViewList
+                .BindScrollRect(SimpleScrollView)
+                .Init("SimpleListView1", SimpleScrollViewPrefabMap, OnCreateSimpleItem, OnBindSimpleItem);
+        }
+
+        /// <summary>
+        /// 测试用：为 SimpleScrollView 的 Content 补上纵向布局，
+        /// 否则 SimpleListView 生成的多个子项会叠在一起。
+        /// </summary>
+        private void PrepareSimpleScrollContent()
+        {
+            if (SimpleScrollView == null)
+            {
+                return;
+            }
+
+            // 普通列表按纵向测试
+            SimpleScrollView.vertical = true;
+            SimpleScrollView.horizontal = false;
+
+            var content = SimpleScrollView.content;
+            if (content == null)
+            {
+                return;
+            }
+
+            var verticalLayout = content.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
+            if (verticalLayout == null)
+            {
+                verticalLayout = content.gameObject.AddComponent<UnityEngine.UI.VerticalLayoutGroup>();
+            }
+
+            // item 模板自带高度，布局组只负责纵向排列，不强制拉伸高度
+            verticalLayout.childControlHeight = false;
+            verticalLayout.childForceExpandHeight = false;
+
+            if (content.GetComponent<UnityEngine.UI.ContentSizeFitter>() == null)
+            {
+                var fitter = content.gameObject.AddComponent<UnityEngine.UI.ContentSizeFitter>();
+                fitter.horizontalFit = UnityEngine.UI.ContentSizeFitter.FitMode.Unconstrained;
+                fitter.verticalFit = UnityEngine.UI.ContentSizeFitter.FitMode.PreferredSize;
+            }
+        }
+
         private int OnBindLoopItem(int arg1, object arg2)
         {
             return 0;
         }
 
         private IListView OnCreateLoopItem(UIFacade arg1, IUIFacadeProvider arg2, int arg3, object arg4)
+        {
+            return this.AddSubViewByFacade<FunctionItemView>(arg1, arg2);
+        }
+
+        private int OnBindSimpleItem(int arg1, object arg2)
+        {
+            return 0;
+        }
+
+        private IListView OnCreateSimpleItem(UIFacade arg1, IUIFacadeProvider arg2, int arg3, object arg4)
         {
             return this.AddSubViewByFacade<FunctionItemView>(arg1, arg2);
         }

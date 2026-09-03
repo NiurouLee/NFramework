@@ -53,7 +53,7 @@ namespace NFramework.ModuleSystem
             inView.SetUIFacade(inFacade, inProvider);
             if (inView is IViewSetData<D> viewSetData)
             {
-                viewSetData.SetData(inData);
+                viewSetData.InitData(inData);
             }
 
             inView.Awake();

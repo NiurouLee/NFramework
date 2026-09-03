@@ -81,8 +81,18 @@ namespace NFramework.ModuleSystem
 
         public virtual void Destroy()
         {
+            if (this.Has(ViewStateFlag.Destroy))
+            {
+                return;
+            }
+
+            this.Learn(ViewStateFlag.Destroy);
             OnDestroy();
-            DestroyFacade();
+            if (Facade != null)
+            {
+                DestroyFacade();
+            }
+
             DestroyComponentContainer();
         }
 
