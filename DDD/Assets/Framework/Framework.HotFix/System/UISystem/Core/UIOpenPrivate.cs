@@ -172,7 +172,7 @@ namespace NFramework.ModuleSystem
         }
 
         /// <summary>从池复用：同步把窗口挂回层级并 Show（异步调用返回已完成 task）</summary>
-        private UniTask OpenFromPoolAsync(ViewConfig inViewConfig, WindowRequest inWindowRequest, Window inWindow)
+        private async UniTask OpenFromPoolAsync(ViewConfig inViewConfig, WindowRequest inWindowRequest, Window inWindow)
         {
             var deferred = new UniTaskCompletionSource();
             inWindowRequest.SetTaskCompletionSource(deferred);
@@ -180,7 +180,26 @@ namespace NFramework.ModuleSystem
             try
             {
                 this.CacheWindowFromPool(inWindowRequest, inWindow);
-                this.OpenPooledWindow(inViewConfig, inWindowRequest);
+                this.AllocOrder(inViewConfig, inWindowRequest);
+                inWindowRequest.SetStage(WindowRequestStage.Layer);
+                this.__WindowSetUpLayer(inViewConfig, inWindowRequest.CacheWindowObj,
+                    inWindowRequest.CacheFacadeObj, inWindowRequest.CacheOrderObj);
+
+                inWindowRequest.SetStage(WindowRequestStage.WindowOpenAnim);
+                inWindowRequest.PrepareReuse();
+                inWindowRequest.Show();
+                if (inWindowRequest.CacheWindowObj != null)
+                {
+                    await inWindowRequest.CacheWindowObj.PlayOpenAnimationAsync(inWindowRequest.CancellationToken);
+                }
+
+                if (inWindowRequest.IsCanceled)
+                {
+                    deferred.TrySetCanceled();
+                    return;
+                }
+
+                inWindowRequest.SetStage(WindowRequestStage.WindowOpen);
                 deferred.TrySetResult();
             }
             catch (Exception e)
@@ -336,7 +355,9 @@ namespace NFramework.ModuleSystem
                 inWindowRequest.CacheProvider(windowFacadeProvider);
                 inWindowRequest.SetStage(WindowRequestStage.FacadeLoading);
 
-                loadFacade = await windowFacadeProvider.AllocAsync(inViewConfig.ID).Task;
+                inWindowRequest.EnableCancellation();
+                loadFacade = await windowFacadeProvider.AllocAsync(inViewConfig.ID, inWindowRequest.CancellationToken)
+                    .Task;
                 if (inWindowRequest.IsCanceled)
                 {
                     if (loadFacade != null && loadFacade.gameObject != null)
@@ -356,8 +377,20 @@ namespace NFramework.ModuleSystem
                 this.__windowSetupRectTransform(loadFacade);
                 inWindowRequest.SetStage(WindowRequestStage.WindowAwake);
                 inWindowRequest.Awake();
-                inWindowRequest.SetStage(WindowRequestStage.WindowOpen);
+                inWindowRequest.SetStage(WindowRequestStage.WindowOpenAnim);
                 inWindowRequest.Show();
+                if (inWindowRequest.CacheWindowObj != null)
+                {
+                    await inWindowRequest.CacheWindowObj.PlayOpenAnimationAsync(inWindowRequest.CancellationToken);
+                }
+
+                if (inWindowRequest.IsCanceled)
+                {
+                    inDeferred.TrySetCanceled();
+                    return;
+                }
+
+                inWindowRequest.SetStage(WindowRequestStage.WindowOpen);
                 inDeferred.TrySetResult();
             }
             catch (OperationCanceledException)

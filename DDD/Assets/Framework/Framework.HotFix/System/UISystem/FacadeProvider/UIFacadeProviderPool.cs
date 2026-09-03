@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -99,9 +100,16 @@ namespace NFramework.ModuleSystem
             return facade;
         }
 
-        public UniTaskCompletionSource<UIFacade> AllocAsync<T>() where T : View
+        public UniTaskCompletionSource<UIFacade> AllocAsync<T>(CancellationToken inCancellationToken = default)
+            where T : View
         {
             var deferred = new UniTaskCompletionSource<UIFacade>();
+            if (inCancellationToken.IsCancellationRequested)
+            {
+                deferred.TrySetCanceled();
+                return deferred;
+            }
+
             var facade = Alloc<T>();
             if (facade != null)
             {
@@ -115,9 +123,16 @@ namespace NFramework.ModuleSystem
             return deferred;
         }
 
-        public UniTaskCompletionSource<UIFacade> AllocAsync(string inViewID)
+        public UniTaskCompletionSource<UIFacade> AllocAsync(string inViewID,
+            CancellationToken inCancellationToken = default)
         {
             var deferred = new UniTaskCompletionSource<UIFacade>();
+            if (inCancellationToken.IsCancellationRequested)
+            {
+                deferred.TrySetCanceled();
+                return deferred;
+            }
+
             var facade = Alloc(inViewID);
             if (facade != null)
             {

@@ -1,3 +1,5 @@
+using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace NFramework.ModuleSystem
@@ -50,8 +52,12 @@ namespace NFramework.ModuleSystem
             switch (inWindowRequest.Stage)
             {
                 case WindowRequestStage.WindowOpen:
+                    this.StartCloseAsync(inWindowRequest);
+                    break;
                 case WindowRequestStage.WindowOpenAnim:
-                    this.__Close(inWindowRequest);
+                    // 正在播放打开动画时收到关闭：取消打开，走半成品清理
+                    inWindowRequest.MarkCanceled();
+                    this.CancelRequest(inWindowRequest);
                     break;
                 case WindowRequestStage.FacadeLoading:
                     this.CancelRequest(inWindowRequest);
@@ -61,6 +67,42 @@ namespace NFramework.ModuleSystem
                         $"UIM::Close ignored, WindowName:{inWindowRequest.Name}, Key:{inWindowRequest.keyObj}, Stage:{inWindowRequest.Stage}");
                     break;
             }
+        }
+
+        private void StartCloseAsync(WindowRequest inWindowRequest)
+        {
+            if (inWindowRequest == null)
+            {
+                return;
+            }
+
+            inWindowRequest.EnableCancellation();
+            CloseWithAnimationAsync(inWindowRequest).Forget();
+        }
+
+        private async UniTaskVoid CloseWithAnimationAsync(WindowRequest inWindowRequest)
+        {
+            var window = inWindowRequest.CacheWindowObj;
+            inWindowRequest.SetStage(WindowRequestStage.WindowClose);
+            try
+            {
+                if (window != null)
+                {
+                    await window.PlayCloseAnimationAsync(inWindowRequest.CancellationToken);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+
+            if (inWindowRequest.IsCanceled)
+            {
+                return;
+            }
+
+            inWindowRequest.SetStage(WindowRequestStage.WindowCloseAnim);
+            this.__Close(inWindowRequest);
         }
 
         /// <summary>

@@ -38,7 +38,7 @@ namespace NFramework.ModuleSystem
 
         public T AddSubViewByFacade<T>(T inView, UIFacade inFacade, IUIFacadeProvider inProvider) where T : View
         {
-            // inView.SetParent(this.m_orderView);
+            inView.SetParent(this.m_orderView);
             this._AddChild(inView);
             inView.SetUIFacade(inFacade, inProvider);
             inView.Awake();

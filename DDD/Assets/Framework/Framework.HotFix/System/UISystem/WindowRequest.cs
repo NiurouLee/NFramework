@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 
 namespace NFramework.ModuleSystem
@@ -14,13 +15,13 @@ namespace NFramework.ModuleSystem
         FacadeLoading = 4,
         FacadeLoaded = 5,
         Layer = 6,
-        WindowAwake = 8,
+        WindowAwake = 7,
+        WindowOpenAnim = 8,
         WindowOpen = 9,
-        WindowOpenAnim = 10,
-        WindowClose = 11,
-        WindowCloseAnim = 12,
-        GameObjectUnloading = 13,
-        Invalid = 14,
+        WindowClose = 10,
+        WindowCloseAnim = 11,
+        GameObjectUnloading = 12,
+        Invalid = 13,
     }
 
     /// <summary>
@@ -217,9 +218,23 @@ namespace NFramework.ModuleSystem
         /// <summary>请求是否已被取消（用于异步加载完成后丢弃结果）</summary>
         internal bool IsCanceled { get; private set; }
 
+        private CancellationTokenSource m_Cancellation;
+
+        /// <summary>请求生命周期使用的取消令牌（资源加载 / 动画等）</summary>
+        internal CancellationToken CancellationToken => this.m_Cancellation?.Token ?? default;
+
+        internal void EnableCancellation()
+        {
+            if (this.m_Cancellation == null)
+            {
+                this.m_Cancellation = new CancellationTokenSource();
+            }
+        }
+
         internal void MarkCanceled()
         {
             this.IsCanceled = true;
+            this.m_Cancellation?.Cancel();
         }
 
         public abstract void Awake();

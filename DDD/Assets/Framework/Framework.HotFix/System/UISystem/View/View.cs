@@ -87,6 +87,17 @@ namespace NFramework.ModuleSystem
             }
 
             this.Learn(ViewStateFlag.Destroy);
+
+            // 独立销毁子 View 时，先从父 View 的 SubViewRecords 摘除，避免 records 里堆积已销毁对象；
+            // 父 View 正在销毁时 records 本来就会清空，不能边遍历边 Remove。
+            var parent = this.Parent;
+            if (parent != null && !parent.Has(ViewStateFlag.Destroy) &&
+                parent.TryGetComponent<ViewSubViewComponent>(out var subViewComponent))
+            {
+                subViewComponent.ViewRecords.TryRemove(this);
+            }
+
+            this.DestroyParent();
             OnDestroy();
             if (Facade != null)
             {

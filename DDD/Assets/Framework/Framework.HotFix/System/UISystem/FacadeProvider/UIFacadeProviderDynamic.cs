@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -33,37 +34,55 @@ namespace NFramework.ModuleSystem
             return goIns.GetComponent<UIFacade>();
         }
 
-        public UniTaskCompletionSource<UIFacade> AllocAsync<T>() where T : View
+        public UniTaskCompletionSource<UIFacade> AllocAsync<T>(CancellationToken inCancellationToken = default)
+            where T : View
         {
             var viewConfig = this.GetSystem<UISystem>().GetViewConfig<T>();
             var viewId = viewConfig.ID;
-            var deferred = this.AllocAsync(viewId);
+            var deferred = this.AllocAsync(viewId, inCancellationToken);
             return deferred;
         }
 
-        public UniTaskCompletionSource<UIFacade> AllocAsync(string inViewID)
+        public UniTaskCompletionSource<UIFacade> AllocAsync(string inViewID,
+            CancellationToken inCancellationToken = default)
         {
             var viewConfig = this.GetSystem<UISystem>().GetViewConfig(inViewID);
             var assetId = viewConfig.AssetID;
             var deferred = new UniTaskCompletionSource<UIFacade>();
-            this.InstantiateAsync(assetId, deferred);
+            if (inCancellationToken.IsCancellationRequested)
+            {
+                deferred.TrySetCanceled();
+                return deferred;
+            }
+
+            this.InstantiateAsync(assetId, deferred, inCancellationToken);
             return deferred;
         }
 
-        private async void InstantiateAsync(string inAssetID, UniTaskCompletionSource<UIFacade> inDeferred)
+        private async void InstantiateAsync(string inAssetID, UniTaskCompletionSource<UIFacade> inDeferred,
+            CancellationToken inCancellationToken)
         {
             this.View.AddPromise(inDeferred);
+            using var registration = inCancellationToken.Register(() => inDeferred.TrySetCanceled());
             try
             {
                 var go = await this.m_ResLoader.LoadAsync<GameObject>(inAssetID);
-                if (go == null)
+                if (go == null || inCancellationToken.IsCancellationRequested)
                 {
                     inDeferred.TrySetCanceled();
                     return;
                 }
 
                 var goIns = UnityEngine.Object.Instantiate(go);
-                inDeferred.TrySetResult(goIns.GetComponent<UIFacade>());
+                if (inCancellationToken.IsCancellationRequested)
+                {
+                    UnityEngine.Object.Destroy(goIns);
+                    inDeferred.TrySetCanceled();
+                }
+                else
+                {
+                    inDeferred.TrySetResult(goIns.GetComponent<UIFacade>());
+                }
             }
             catch (OperationCanceledException)
             {
@@ -71,8 +90,12 @@ namespace NFramework.ModuleSystem
             }
             catch (System.Exception e)
             {
-                this.GetSystem<LoggerSystem>()
-                    ?.ErrStack($"UIFacadeProviderDynamic load facade failed, AssetID:{inAssetID}, Error:{e}");
+                if (!inCancellationToken.IsCancellationRequested)
+                {
+                    this.GetSystem<LoggerSystem>()
+                        ?.ErrStack($"UIFacadeProviderDynamic load facade failed, AssetID:{inAssetID}, Error:{e}");
+                }
+
                 inDeferred.TrySetCanceled();
             }
         }

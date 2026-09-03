@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
-using UnityEngine;
 using NFramework.ModuleSystem;
-using Unity.VisualScripting;
 
 
 namespace Game.Logic
@@ -102,6 +99,7 @@ namespace Game.Logic
         private void InitLoopListView()
         {
             m_LoopScrollViewList = new LoopListViewComponent();
+            this.AddComponent(m_LoopScrollViewList);
             m_LoopScrollViewList
                 .BindScrollRect(LoopScrollView)
                 .Init("LoopListView1", LoopScrollViewPrefabMap, OnCreateLoopItem, OnBindLoopItem);
@@ -110,8 +108,8 @@ namespace Game.Logic
         private void InitSimpleListView()
         {
             PrepareSimpleScrollContent();
-
             m_SimpleScrollViewList = new SimpleListViewComponent();
+            this.AddComponent(m_SimpleScrollViewList);
             m_SimpleScrollViewList
                 .BindScrollRect(SimpleScrollView)
                 .Init("SimpleListView1", SimpleScrollViewPrefabMap, OnCreateSimpleItem, OnBindSimpleItem);
