@@ -1,0 +1,16 @@
+﻿:root {
+    --mainColor: #262626;
+}
+
+
+.inspector{
+    background-color: #404040;
+    border-radius: 5px;
+    padding: 10px 5px;
+}
+
+.inspector>Label{
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin: 5px 0px;
+}

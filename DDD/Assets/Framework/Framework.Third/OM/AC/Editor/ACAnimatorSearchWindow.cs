@@ -31,6 +31,7 @@ namespace OM.AC.Editor
                 new SearchTreeGroupEntry(new GUIContent("Create"),0),
             };
 
+            ACAnimatorEditor.EnsureClipsLoaded();
             
             var objectsByPath = new Dictionary<string, List<ACClip>>();
 

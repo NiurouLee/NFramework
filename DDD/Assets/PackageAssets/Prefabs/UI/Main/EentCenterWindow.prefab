@@ -573,6 +573,9 @@ GameObject:
   - component: {fileID: 9068081271235834117}
   - component: {fileID: 7773936689126970459}
   - component: {fileID: 7969907533336034338}
+  - component: {fileID: 7866791081995152852}
+  - component: {fileID: 4405472377811506890}
+  - component: {fileID: 7945417015969284905}
   m_Layer: 5
   m_Name: EentCenterWindow
   m_TagString: Untagged
@@ -701,6 +704,122 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &7866791081995152852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3527389545931856917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62773353defe4318bca97de38a9880c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OpenAnim: {fileID: 4405472377811506890}
+  CloseAnim: {fileID: 0}
+--- !u!114 &4405472377811506890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3527389545931856917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5d4cf6e02a34b5dba11a2142ddada14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fullDuration: 1
+  speed: 1
+  timeIndependent: 0
+  playOnEnable: 0
+  clips:
+  - rid: 1384661297576017921
+  loop: 0
+  events:
+    onPlay:
+      m_PersistentCalls:
+        m_Calls: []
+    onPause:
+      m_PersistentCalls:
+        m_Calls: []
+    onResume:
+      m_PersistentCalls:
+        m_Calls: []
+    onStop:
+      m_PersistentCalls:
+        m_Calls: []
+    onComplete:
+      m_PersistentCalls:
+        m_Calls: []
+    onOneLoopCompleted:
+      m_PersistentCalls:
+        m_Calls: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 1384661297576017921
+      type: {class: ClipTransformScale, ns: OM.AC, asm: OM.AC.Runtime}
+      data:
+        name: Animaite Scale
+        color: {r: 0.09411765, g: 0.74509805, b: 0.9529412, a: 1}
+        duration: 1
+        startAt: 0
+        enabled: 1
+        events:
+          onEnter:
+            m_PersistentCalls:
+              m_Calls: []
+          onExit:
+            m_PersistentCalls:
+              m_Calls: []
+        initializer:
+          value: {x: 0, y: 0, z: 0}
+          enabled: 0
+        target: {fileID: 1701521945775164597}
+        ease:
+          easeDataType: 0
+          animationCurve:
+            serializedVersion: 2
+            m_Curve:
+            - serializedVersion: 3
+              time: 0
+              value: 0
+              inSlope: 0
+              outSlope: 1
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            - serializedVersion: 3
+              time: 1
+              value: 1
+              inSlope: 1
+              outSlope: 0
+              tangentMode: 0
+              weightedMode: 0
+              inWeight: 0
+              outWeight: 0
+            m_PreInfinity: 2
+            m_PostInfinity: 2
+            m_RotationOrder: 4
+          easeType: 0
+        fromType: 0
+        from: {x: 0.1, y: 0.1, z: 1}
+        to: {x: 1, y: 1, z: 1}
+--- !u!225 &7945417015969284905
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3527389545931856917}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3661814101729348343
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,7 +1099,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.000014838501, y: 0.000023337067}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &7404871428545682849

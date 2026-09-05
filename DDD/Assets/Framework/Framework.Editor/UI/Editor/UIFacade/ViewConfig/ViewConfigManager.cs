@@ -19,6 +19,7 @@ namespace NFramework.ModuleSystem
             public string AssetID;
             public ushort Layer;
             public bool IsWindow;
+            public bool IsFullScreen;
         }
 
         [System.Serializable]
@@ -133,7 +134,8 @@ namespace NFramework.ModuleSystem
                 ID = configID,
                 AssetID = assetID ?? "",
                 Layer = viewConfig.Layer,
-                IsWindow = viewConfig.IsWindow
+                IsWindow = viewConfig.IsWindow,
+                IsFullScreen = viewConfig.IsFullScreen
             };
 
             // 更新或添加配置
@@ -285,6 +287,7 @@ namespace NFramework.ModuleSystem
                     config.AssetID = data.AssetID;
                     config.SetLayer(data.Layer);
                     config.SetWindow(data.IsWindow);
+                    config.SetFullScreen(data.IsFullScreen);
                     
                     configMap[data.ID] = config;
                 }

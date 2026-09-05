@@ -73,6 +73,7 @@ namespace NFramework.ModuleSystem
             state.ViewConfig.AssetID = data.AssetID;
             state.ViewConfig.SetLayer(data.Layer);
             state.ViewConfig.SetWindow(data.IsWindow);
+            state.ViewConfig.SetFullScreen(data.IsFullScreen);
         }
     }
 }

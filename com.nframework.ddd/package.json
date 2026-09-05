@@ -1,0 +1,15 @@
+{
+  "name": "com.nframework.ddd",
+  "version": "0.1.0",
+  "displayName": "NFramework DDD",
+  "description": "DDD Assets published as a Unity Package so it can be installed from Package Manager.",
+  "unity": "2022.3",
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.2",
+    "com.unity.render-pipelines.universal": "14.0.12",
+    "com.unity.textmeshpro": "3.0.7",
+    "com.unity.timeline": "1.7.7",
+    "com.unity.ugui": "1.0.0",
+    "com.tuyoogame.yooasset": "2.3.17"
+  }
+}

@@ -139,6 +139,16 @@ namespace NFramework.ModuleSystem
                     viewConfig.SetLayer((ushort)UILayer.Basic);
                 }
             }
+
+            if (viewConfig.IsWindow)
+            {
+                bool currentIsFullScreen = viewConfig.IsFullScreen;
+                bool newIsFullScreen = EditorGUILayout.Toggle("是否全屏界面", currentIsFullScreen);
+                if (currentIsFullScreen != newIsFullScreen)
+                {
+                    viewConfig.SetFullScreen(newIsFullScreen);
+                }
+            }
         }
 
         private static void DrawViewConfigTools(UIFacade facade, ViewConfig viewConfig)

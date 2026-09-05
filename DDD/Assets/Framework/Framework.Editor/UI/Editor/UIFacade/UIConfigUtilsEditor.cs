@@ -70,6 +70,7 @@ namespace NFramework.ModuleSystem
                                 config.AssetID = data.AssetID;
                                 config.SetLayer(data.Layer);
                                 config.SetWindow(data.IsWindow);
+                                config.SetFullScreen(data.IsFullScreen);
                                 return;
                             }
                         }
@@ -89,6 +90,7 @@ namespace NFramework.ModuleSystem
             public string AssetID;
             public ushort Layer;
             public bool IsWindow;
+            public bool IsFullScreen;
         }
 
         [System.Serializable]

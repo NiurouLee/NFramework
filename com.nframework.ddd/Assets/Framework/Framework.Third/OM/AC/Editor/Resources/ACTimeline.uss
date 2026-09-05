@@ -1,0 +1,255 @@
+﻿:root {
+    --mainColor: #262626;
+}
+
+/*--------------- Timeline --------------- */
+.timeline{
+    background-color: var(--mainColor);
+    border-radius: 5px;
+    margin: 10px 0px;
+}
+
+.top-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+}
+
+/*--------------- Header Section --------------- */
+.header-section{
+    background-color: var(--mainColor);
+    padding: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    height: 50px;
+    justify-content: center;
+}
+
+.header-section>Label{
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.timeline-length-field{
+    position: absolute;
+    right: 10px;
+}
+
+.timeline-length-field>FloatInput{
+    min-width: 50px;
+    -unity-text-align: middle-center;
+}
+
+/*--------------- Time Section --------------- */
+
+.time-section{
+    background-color: var(--mainColor);
+    height: 20px;
+    flex-direction: row;
+    justify-content: space-between;
+    border-color: #090909;
+    border-bottom-width: 0.5px;
+    border-top-width: 0.5px;
+    align-items: center;
+
+}
+
+.time-section-number{
+    color: rgba(255, 255, 255, 0.24);
+    font-size: 9px;
+}
+
+.time-section-pointer{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+}
+
+.time-section-pointer>#pointer-icon{
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: -10px;
+}
+
+.pointer-line{
+    width: 1px;
+    background-color: #ffffff;
+    position: absolute;
+    height: 200px;
+}
+
+/*--------------- Content Section --------------- */
+
+.content-section{
+}
+
+/*--------------- Footer Section --------------- */
+
+.footer-section{
+    height: 50px;
+    color: #262626;
+    padding: 0px 5px;
+    border-color: #151515;
+    border-top-width: 0.5px;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.footer-container{
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    justify-content: space-between;
+    transition-duration: .2s;
+}
+
+
+/*--------------- Clip --------------- */
+
+.timeline-clip {
+    width: 200px;
+    height: 30px;
+    background-color: #3d4247;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: rgba(255,199,168,0);
+    position: absolute;
+    cursor: pan;
+    transition-property: top;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-out-back;
+}
+
+.timeline-clip:hover{
+    border-color: #9d9d9d;
+    border-width: 1px;
+}
+
+.timeline-clip-dragging{
+    border-color: #9d9d9d;
+    border-width: 1px;
+    transition: left 0s;
+}
+
+.clip-color-line{
+    position: absolute;
+    bottom: 2px;
+    left: 3px;
+    right: 3px;
+    height: 3px;
+    background-color: #565656;
+    border-radius: 2px;
+    transition: background-color .15s;
+}
+
+.clip-name{
+    color: #ffffff;
+    font-size: 12px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    height: 100%;
+}
+
+.timeline-row{
+    border-bottom-width: 1px;
+    border-color: #151515;
+    transition-duration: .15s;
+    height: 35px;
+    -unity-font-style: bold;
+}
+
+.clip-handle{
+    width: 10px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: resize-horizontal;
+}
+
+.clip-selection-border{
+    position: absolute;
+    left: -5px;
+    right: -5px;
+    top: -5px;
+    bottom: -5px;
+    border-color: #ffffff;
+    border-width: 1px;
+    border-radius: 5px;
+    opacity: 0;
+}
+
+.clip-snap-line{
+    position: absolute;
+    left: 0px;
+    height: 70px;
+    width: 1px;
+    background-color: #ffffff;
+    opacity: 0;
+    transition: opacity .15s;
+}
+
+.clip-warning-icon{
+    position: absolute;
+    left: 4px;
+    width: 20px;
+    height: 20px;
+    
+    opacity: 0;
+    transition: opacity .15s;
+}
+
+.clip-highlight-button{
+    position: absolute;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    background-color: rgb(61, 65, 70);
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #3d4146;
+    transition-duration: .15s;
+    cursor: link;
+}
+
+.clip-highlight-button:hover{
+    background-color: rgb(28, 28, 28);
+    color: aquamarine;
+    -unity-background-image-tint-color: aquamarine;
+}
+
+/*--------------- Other --------------- */
+
+.btn{
+    background-color: rgb(33, 33, 33);
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #151515;
+    color: #ffffff;
+    padding: 5px;
+    margin: 5px;
+    transition-duration: .15s;
+    min-width: 30px;
+    height: 30px;
+    -unity-font-style: bold;
+    cursor: link;
+}
+
+.btn:hover{
+    background-color: rgb(28, 28, 28);
+    color: aquamarine;
+    -unity-background-image-tint-color: aquamarine;
+}
+
+.preview-button{
+    position: absolute;
+    left: 0px;
+}
+
+.preview-btn-on{
+    color: #ff0c0c;
+}

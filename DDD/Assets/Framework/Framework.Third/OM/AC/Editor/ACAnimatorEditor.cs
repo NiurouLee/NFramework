@@ -30,7 +30,7 @@ namespace OM.AC.Editor
         {
             Animator = target as ACAnimator;
             Animator.TimelineTime = 0;
-            if(AllClipsInProject == null || AllClipsInProject.Count == 0) AllClipsInProject = GetAllClips();
+            EnsureClipsLoaded();
             SetSelectedClip(null);
             EditorApplication.update += Update;
             Undo.undoRedoPerformed += UndoRedoPerformed;
@@ -47,6 +47,14 @@ namespace OM.AC.Editor
             Undo.undoRedoPerformed -= UndoRedoPerformed;
             EditorApplication.playModeStateChanged -= OnplayModeStateChanged;
             EditorApplication.quitting -= OnEditorApplicationQuitting;
+        }
+
+        /// <summary>
+        /// Ensure the project clips have been discovered before the search window uses them.
+        /// </summary>
+        public static void EnsureClipsLoaded()
+        {
+            if (AllClipsInProject == null || AllClipsInProject.Count == 0) AllClipsInProject = GetAllClips();
         }
         
         /// <summary>
@@ -326,15 +334,10 @@ namespace OM.AC.Editor
         /// </summary>
         /// <param name="className"></param>
         /// <returns></returns>
-        static Dictionary<string, MonoScript> s_ClassCache = new();
         static MonoScript FindClass(string className)
         {
-            if (s_ClassCache.TryGetValue(className, out var script))
-            {
-                return script;
-            }
-
             string[] assetsPaths = AssetDatabase.FindAssets(className);
+
             foreach (string assetPath in assetsPaths)
             {
                 string assetFilePath = AssetDatabase.GUIDToAssetPath(assetPath);
@@ -342,12 +345,9 @@ namespace OM.AC.Editor
                 if (assetFilePath.EndsWith(className + ".cs")) // Assuming it's a C# file
                 {
                     var loadAssetAtPath = AssetDatabase.LoadAssetAtPath<MonoScript>(assetFilePath);
-                    s_ClassCache[className] = loadAssetAtPath;
                     return loadAssetAtPath;
                 }
             }
-
-            s_ClassCache[className] = null;
             return null;
         }
         
@@ -357,13 +357,24 @@ namespace OM.AC.Editor
         /// <returns></returns>
         private static List<ACClip> GetAllClips()
         {
-            var types = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
-                from assemblyType in domainAssembly.GetTypes()
-                where (assemblyType.IsSubclassOf(typeof(ACClip)) && !assemblyType.IsAbstract)
-                select assemblyType);
+            var clipTypes = new List<Type>();
+            foreach (var domainAssembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                Type[] assemblyTypes;
+                try
+                {
+                    assemblyTypes = domainAssembly.GetTypes();
+                }
+                catch (ReflectionTypeLoadException e)
+                {
+                    assemblyTypes = e.Types.Where(type => type != null).ToArray();
+                }
+
+                clipTypes.AddRange(assemblyTypes.Where(type => type.IsSubclassOf(typeof(ACClip)) && !type.IsAbstract));
+            }
 
             var uicClips = new List<ACClip>();
-            foreach (var type in types)
+            foreach (var type in clipTypes)
             {
                 uicClips.Add((ACClip)Activator.CreateInstance(type));
             }

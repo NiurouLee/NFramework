@@ -24,6 +24,7 @@ namespace Game.Logic
             public string AssetID;
             public ushort Layer;
             public bool IsWindow;
+            public bool IsFullScreen;
         }
 
         public Dictionary<string, ViewConfig> ConfigMap { get; private set; }
@@ -83,6 +84,7 @@ namespace Game.Logic
                         config.AssetID = data.AssetID;
                         config.SetLayer(data.Layer);
                         config.SetWindow(data.IsWindow);
+                        config.SetFullScreen(data.IsFullScreen);
                         this.ConfigMap[data.ID] = config;
                     }
                 }
