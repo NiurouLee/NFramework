@@ -77,6 +77,7 @@ namespace NFramework.ModuleSystem
             {
                 return;
             }
+            inWindowRequest.SetStage(WindowRequestStage.WindowClose);
             this.OnCloseOcclusion(inWindowRequest);
             inWindowRequest.EnableCancellation();
             if (this.HaveCloseAnim(inWindowRequest, out float time))
@@ -104,8 +105,8 @@ namespace NFramework.ModuleSystem
 
         protected void _OnAnimClose(WindowRequest inWindowRequest)
         {
-            inWindowRequest.SetStage(WindowRequestStage.WindowClose);
             this.__Close(inWindowRequest);
+            inWindowRequest.SetStage(WindowRequestStage.WindowClosed);
         }
 
         /// <summary>

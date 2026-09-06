@@ -116,17 +116,11 @@ namespace NFramework.ModuleSystem
 
             if (inVisible)
             {
-                if (!facade.gameObject.activeSelf)
-                {
-                    facade.GetComponent<Canvas>().enabled = true;
-                }
+                facade.GetComponent<Canvas>().enabled = true;
             }
             else
             {
-                if (facade.gameObject.activeSelf)
-                {
-                    facade.GetComponent<Canvas>().enabled = false;
-                }
+                facade.GetComponent<Canvas>().enabled = false;
             }
         }
     }
